@@ -26,6 +26,7 @@ object TestCombineByKey {
       .set("spark.executor.memory", "1g")
 
     val sc = new SparkContext(sparkConf)
+    // val sc = new StreamingContext(sparkConf, Seconds(1))
 
     // If data set is reused then cache recommended...
     val scoresWithKeyRDD = sc.parallelize(scoresWithKey).partitionBy(new HashPartitioner(3)).cache
@@ -51,7 +52,8 @@ object TestCombineByKey {
       // calculate the average
     ).map({ case (key, value) => (key, value._1 / value._2) })
 
-    avgScoresRDD.collect.foreach(println)
-
+    avgScoresRDD
+      .collect
+      .foreach(println)
   }
 }
