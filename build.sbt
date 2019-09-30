@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.11.8"
 
-val sparkVersion = "2.1.0"
+val sparkVersion = "2.2.0"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % sparkVersion,

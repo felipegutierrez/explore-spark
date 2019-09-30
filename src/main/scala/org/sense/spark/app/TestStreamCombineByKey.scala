@@ -26,7 +26,7 @@ object TestStreamCombineByKey {
       (acc1: (Int, Int), acc2: (Int, Int)) => (acc1._1 + acc2._1, acc1._2 + acc2._2), // mergeCombiners
       new HashPartitioner(3)
     )
-    
+
     // Print the first ten elements of each RDD generated in this DStream to the console
     wordCounts.print()
 
