@@ -1,5 +1,6 @@
 package org.sense.spark.app
 
+import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.{HashPartitioner, SparkConf}
 
@@ -8,11 +9,23 @@ object TestStreamCombineByKey {
 
     // Create a local StreamingContext with two working thread and batch interval of 1 second.
     // The master requires 2 cores to prevent from a starvation scenario.
-    val conf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCount")
+    val conf = new SparkConf().setMaster("local[2]").setAppName("LocalWordCount")
     val ssc = new StreamingContext(conf, Seconds(5))
 
     // Create a DStream that will connect to hostname:port, like localhost:9999
-    val lines = ssc.socketTextStream("localhost", 9999)
+    // val lines = ssc.socketTextStream("localhost", 9999)
+    val queue = new scala.collection.mutable.Queue[RDD[String]]
+    val thread = new Thread("pool data source") {
+      override def run() {
+        while (true) {
+          queue.enqueue(ssc.sparkContext.parallelize(List("to be or not to be , that is the question")))
+          Thread.sleep(1000)
+        }
+      }
+    }
+    thread.start()
+
+    val lines = ssc.queueStream(queue)
 
     // Split each line into words
     val words = lines.flatMap(_.split(" "))
@@ -28,7 +41,9 @@ object TestStreamCombineByKey {
     )
 
     // Print the first ten elements of each RDD generated in this DStream to the console
-    wordCounts.print()
+    wordCounts
+      // .window(Seconds(10))
+      .print()
 
     ssc.start() // Start the computation
     ssc.awaitTermination() // Wait for the computation to terminate
