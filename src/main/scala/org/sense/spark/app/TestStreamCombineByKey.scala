@@ -3,20 +3,20 @@ package org.sense.spark.app
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.{HashPartitioner, SparkConf}
-import org.sense.spark.util.StreamingExamples
 
 import scala.collection.mutable.Queue
 
 object TestStreamCombineByKey {
   def main(args: Array[String]): Unit = {
 
-    StreamingExamples.setStreamingLogLevels()
+    // StreamingExamples.setStreamingLogLevels()
+
     // Create a local StreamingContext with two working thread and batch interval of 1 second.
     // The master requires 4 cores to prevent from a starvation scenario.
     val sparkConf = new SparkConf()
       .setAppName("QueueStreamWordCount")
       .setMaster("local[4]")
-    val ssc = new StreamingContext(sparkConf, Seconds(5))
+    val ssc = new StreamingContext(sparkConf, Seconds(1))
 
     // Create a DStream that will connect to hostname:port, like localhost:9999
     val rddQueue = new Queue[RDD[String]]()
@@ -33,8 +33,9 @@ object TestStreamCombineByKey {
         (acc1: (Int, Int), acc2: (Int, Int)) => (acc1._1 + acc2._1, acc1._2 + acc2._2), // mergeCombiners
         new HashPartitioner(3)
       )
-      // .window(Seconds(10))
-      .print()
+    // .window(Seconds(10))
+
+    wordCounts.print()
 
     ssc.start() // Start the computation
 
@@ -45,7 +46,7 @@ object TestStreamCombineByKey {
           rddQueue.synchronized {
             rddQueue += ssc.sparkContext.makeRDD(List("to be or not to be , that is the question"))
           }
-          Thread.sleep(1000)
+          Thread.sleep(100)
         }
       }
     }
