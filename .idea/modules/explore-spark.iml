@@ -60,6 +60,7 @@
     <orderEntry type="library" name="sbt: javax.xml.bind:jaxb-api:2.2.2:jar" level="project" />
     <orderEntry type="library" name="sbt: javax.xml.stream:stax-api:1.0-2:jar" level="project" />
     <orderEntry type="library" name="sbt: jline:jline:0.9.94:jar" level="project" />
+    <orderEntry type="library" name="sbt: joda-time:joda-time:2.5:jar" level="project" />
     <orderEntry type="library" name="sbt: log4j:log4j:1.2.17:jar" level="project" />
     <orderEntry type="library" name="sbt: mx4j:mx4j:3.0.2:jar" level="project" />
     <orderEntry type="library" name="sbt: net.iharder:base64:2.3.8:jar" level="project" />

@@ -13,9 +13,13 @@ sbt run
 sbt package
 ```
 ### Deploy in a Spark standalone cluster
+
+After starting the Spark standalone cluster access it at [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
 ```
-./bin/spark-submit --master spark://localhost:7077 --deploy-mode cluster \
---driver-cores 4 --name "TestStreamCombineByKey" \
-target/scala-2.11/explore-spark_2.11-0.1.jar
+$ cd spark-2.4.6-bin-hadoop2.7/
+$ sbin/start-all.sh 
+$ ./bin/spark-submit --master spark://localhost:7077 --deploy-mode cluster \
+      --driver-cores 4 --name "TaxiRideCountCombineByKey" \
+      target/scala-2.11/explore-spark_2.11-0.1.jar
 ```
 

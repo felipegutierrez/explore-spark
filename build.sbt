@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion,
   "org.apache.bahir" %% "spark-streaming-twitter" % sparkVersion,
-  "com.twitter" %% "algebird-core" % "0.8.0"
+  "com.twitter" %% "algebird-core" % "0.8.0",
+  "joda-time" % "joda-time" % "2.5"
 )
 
-mainClass in(Compile, packageBin) := Some("org.sense.spark.app.TestStreamCombineByKey")
+mainClass in(Compile, packageBin) := Some("org.sense.spark.app.TaxiRideCountCombineByKey")
