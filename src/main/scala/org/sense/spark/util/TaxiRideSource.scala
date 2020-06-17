@@ -20,12 +20,14 @@ object TimeFormatter {
 
 class TaxiRideSource extends Receiver[TaxiRide](StorageLevel.MEMORY_AND_DISK_2) {
   val dataFilePath = "/home/flink/nycTaxiRides.gz";
-  val delayInNanoSeconds: Long = 1000000
+  var dataRateListener: DataRateListener = _
 
   /**
    * Start the thread that receives data over a connection
    */
   def onStart() {
+    dataRateListener = new DataRateListener()
+    dataRateListener.start()
     new Thread("TaxiRide Source") {
       override def run() {
         receive()
@@ -49,7 +51,7 @@ class TaxiRideSource extends Receiver[TaxiRide](StorageLevel.MEMORY_AND_DISK_2) 
         val taxiRide: TaxiRide = getTaxiRideFromString(line)
         store(taxiRide)
         // regulate frequency of the source
-        busySleep(startTime)
+        dataRateListener.busySleep(startTime)
       }
     }
   }
@@ -76,10 +78,5 @@ class TaxiRideSource extends Receiver[TaxiRide](StorageLevel.MEMORY_AND_DISK_2) 
     val driverId: Long = tokens(10).toLong
 
     TaxiRide(rideId, isStart, startTime, endTime, startLon, startLat, endLon, endLat, passengerCnt, taxiId, driverId)
-  }
-
-  def busySleep(startTime: Long): Unit = {
-    val deadLine: Long = startTime + delayInNanoSeconds
-    while (System.nanoTime() < deadLine) {}
   }
 }
