@@ -44,14 +44,24 @@ class TaxiRideSource extends Receiver[TaxiRide](StorageLevel.MEMORY_AND_DISK_2) 
     while (!isStopped()) {
       val gzipStream = new GZIPInputStream(new FileInputStream(dataFilePath))
       val reader: BufferedReader = new BufferedReader(new InputStreamReader(gzipStream, StandardCharsets.UTF_8))
-      var line: String = ""
-      while (!isStopped() && reader.ready() && (line = reader.readLine()) != null) {
-        val startTime = System.nanoTime
-        // read the line on the file and yield the object
-        val taxiRide: TaxiRide = getTaxiRideFromString(line)
-        store(taxiRide)
-        // regulate frequency of the source
-        dataRateListener.busySleep(startTime)
+      try {
+        var line: String = null
+        do {
+          // start time before reading the line
+          val startTime = System.nanoTime
+
+          // read the line on the file and yield the object
+          line = reader.readLine
+          if (line != null) {
+            val taxiRide: TaxiRide = getTaxiRideFromString(line)
+            store(taxiRide)
+          }
+
+          // regulate frequency of the source
+          dataRateListener.busySleep(startTime)
+        } while (line != null)
+      } finally {
+        reader.close
       }
     }
   }
