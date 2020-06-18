@@ -8,6 +8,7 @@ import org.sense.spark.util.{MqttSink, TaxiRideSource}
 object TaxiRideCountCombineByKey {
 
   val mqttTopic: String = "spark-mqtt-sink"
+  val host: String = "127.0.0.1";
   val qos: QoS = QoS.AT_LEAST_ONCE
 
   def main(args: Array[String]): Unit = {
@@ -32,20 +33,17 @@ object TaxiRideCountCombineByKey {
 
     if (outputMqtt) {
       println("Use the command below to consume data:")
-      println("mosquitto_sub -h 127.0.0.1 -p 1883 -t " + mqttTopic)
-      val mqttSink = ssc.sparkContext.broadcast(MqttSink)
-      countStream
-        .foreachRDD {
-          rdd =>
-            rdd.foreachPartition {
-              par =>
-                par.foreach(message => mqttSink.value.connection.publish(mqttTopic, message.toString().getBytes, qos, false))
-            }
+      println("mosquitto_sub -h " + host + " -p 1883 -t " + mqttTopic)
+
+      val mqttSink = ssc.sparkContext.broadcast(MqttSink(host))
+      countStream.foreachRDD { rdd =>
+        rdd.foreach { message =>
+          mqttSink.value.send(mqttTopic, message.toString())
         }
+      }
     } else {
       countStream.print()
     }
-
     ssc.start() // Start the computation
     ssc.awaitTermination() // Wait for the computation to terminate
   }
