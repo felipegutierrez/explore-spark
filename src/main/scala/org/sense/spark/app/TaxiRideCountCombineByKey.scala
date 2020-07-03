@@ -3,7 +3,7 @@ package org.sense.spark.app
 import org.apache.spark.streaming.{Milliseconds, StreamingContext}
 import org.apache.spark.{HashPartitioner, SparkConf}
 import org.fusesource.mqtt.client.QoS
-import org.sense.spark.util.{MqttSink, TaxiRideSource}
+import org.sense.spark.util.{MqttSink, TaxiRide, TaxiRideSource}
 
 object TaxiRideCountCombineByKey {
 
@@ -23,13 +23,14 @@ object TaxiRideCountCombineByKey {
     val ssc = new StreamingContext(sparkConf, Milliseconds(1000))
 
     val stream = ssc.receiverStream(new TaxiRideSource()).cache()
-    val driverStream = stream.map(taxiRide => (taxiRide.driverId, 1))
-    val countStream = driverStream.combineByKey(
-      (v) => (v, 1), //createCombiner
-      (acc: (Int, Int), v) => (acc._1 + v, acc._2 + 1), //mergeValue
-      (acc1: (Int, Int), acc2: (Int, Int)) => (acc1._1 + acc2._1, acc1._2 + acc2._2), // mergeCombiners
-      new HashPartitioner(4)
-    )
+
+    val driverIdTaxiRide = (taxiRide: TaxiRide) => (taxiRide.driverId, 1)
+    val driverStream = stream.map(driverIdTaxiRide)
+
+    val combiner = (v: Int) => v
+    val combinerMergeValue = (acc: Int, v: Int) => acc + v
+    val combinerMergeCombiners = (acc1: Int, acc2: Int) => acc1 + acc2
+    val countStream = driverStream.combineByKey(combiner, combinerMergeValue, combinerMergeCombiners, new HashPartitioner(4))
 
     if (outputMqtt) {
       println("Use the command below to consume data:")

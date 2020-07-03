@@ -23,19 +23,19 @@ object WordCountStreamCombineByKey {
     val lines = ssc.queueStream(rddQueue).cache()
     // val lines = ssc.socketTextStream("localhost", 9999)
 
-    // UDFs
+    // val streamOfWords = lines.flatMap(_.split(" "))
+    val streamOfWords = lines.flatMap { l => l.split(" ") }
+
+    // UDF
     val wordTuples = (word: String) => (word, 1)
+    val streamOfTuples = streamOfWords.map(wordTuples)
+
     // Combiner UDFs
     val combiner = (v: Int) => v
     val combinerMergeValue = (acc: Int, v: Int) => acc + v
     val combinerMergeCombiners = (acc1: Int, acc2: Int) => acc1 + acc2
-
-    // val streamOfWords = lines.flatMap(_.split(" "))
-    val streamOfWords = lines.flatMap { l => l.split(" ") }
-
-    val streamOfTuples = streamOfWords.map(wordTuples)
-
     val wordCounts = streamOfTuples.combineByKey(combiner, combinerMergeValue, combinerMergeCombiners, new HashPartitioner(4))
+
     // val wordCounts = streamOfTuples.reduceByKey(_ + _)
     // val wordCountsWindow = wordCounts.window(Seconds(10))
 
