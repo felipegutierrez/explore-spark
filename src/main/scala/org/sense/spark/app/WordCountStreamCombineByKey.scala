@@ -6,7 +6,7 @@ import org.apache.spark.{HashPartitioner, SparkConf}
 
 import scala.collection.mutable.Queue
 
-object TestStreamCombineByKey {
+object WordCountStreamCombineByKey {
   def main(args: Array[String]): Unit = {
 
     // StreamingExamples.setStreamingLogLevels()
@@ -20,31 +20,36 @@ object TestStreamCombineByKey {
 
     // Create a DStream that will connect to hostname:port, like localhost:9999
     val rddQueue = new Queue[RDD[String]]()
-    val lines = ssc.queueStream(rddQueue)
+    val lines = ssc.queueStream(rddQueue).cache()
     // val lines = ssc.socketTextStream("localhost", 9999)
 
-    val wordCounts = lines
-      .flatMap(_.split(" "))
-      .map(word => (word, 1))
-      // .reduceByKey(_ + _)
-      .combineByKey(
-        (v) => (v, 1), //createCombiner
-        (acc: (Int, Int), v) => (acc._1 + v, acc._2 + 1), //mergeValue
-        (acc1: (Int, Int), acc2: (Int, Int)) => (acc1._1 + acc2._1, acc1._2 + acc2._2), // mergeCombiners
-        new HashPartitioner(3)
-      )
-    // .window(Seconds(10))
+    // UDFs
+    val wordTuples = (word: String) => (word, 1)
+    // Combiner UDFs
+    val combiner = (v: Int) => v
+    val combinerMergeValue = (acc: Int, v: Int) => acc + v
+    val combinerMergeCombiners = (acc1: Int, acc2: Int) => acc1 + acc2
+
+    // val streamOfWords = lines.flatMap(_.split(" "))
+    val streamOfWords = lines.flatMap { l => l.split(" ") }
+
+    val streamOfTuples = streamOfWords.map(wordTuples)
+
+    val wordCounts = streamOfTuples.combineByKey(combiner, combinerMergeValue, combinerMergeCombiners, new HashPartitioner(4))
+    // val wordCounts = streamOfTuples.reduceByKey(_ + _)
+    // val wordCountsWindow = wordCounts.window(Seconds(10))
 
     wordCounts.print()
 
-    ssc.start() // Start the computation
+    // Start the computation
+    ssc.start()
 
     // Create and push some RDDs into the queue
     val thread = new Thread("pool data source") {
       override def run() {
         while (true) {
           rddQueue.synchronized {
-            rddQueue += ssc.sparkContext.makeRDD(List("to be or not to be , that is the question"))
+            rddQueue += ssc.sparkContext.makeRDD(List("to be or not to be , that is the question , or what would be the question ?"))
           }
           Thread.sleep(100)
         }
@@ -52,6 +57,7 @@ object TestStreamCombineByKey {
     }
     thread.start()
 
-    ssc.awaitTermination() // Wait for the computation to terminate
+    // Wait for the computation to terminate
+    ssc.awaitTermination()
   }
 }
