@@ -2,15 +2,14 @@ name := "explore-spark"
 
 version := "0.1"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.3"
 
-val sparkVersion = "2.2.0"
+val sparkVersion = "3.0.0"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion,
-  "org.apache.bahir" %% "spark-streaming-twitter" % sparkVersion,
-  "com.twitter" %% "algebird-core" % "0.8.0",
+  "com.twitter" %% "algebird-core" % "0.13.7",
   "joda-time" % "joda-time" % "2.5",
   "org.fusesource.mqtt-client" % "mqtt-client" % "1.16"
 )
