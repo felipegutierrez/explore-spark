@@ -22,14 +22,12 @@ object TaxiRideAvgCombineByKey {
 
     val stream = ssc.receiverStream(new TaxiRideSource()).cache()
 
-    // type DriverIdTripTime = (Long, Long, Int)
+    // UDFs
     val driverIdTaxiRide = (taxiRide: TaxiRide) => {
       val diffInMillis: Long = taxiRide.endTime.getMillis() - taxiRide.startTime.getMillis()
       val distance: Float = TaxiRide.distance(taxiRide.startLat, taxiRide.startLon, taxiRide.endLat, taxiRide.endLon)
       (taxiRide.driverId, (diffInMillis, distance, taxiRide.passengerCnt, 1))
     }
-    val driverStream = stream.map(driverIdTaxiRide)
-
     val combiner = (v: (Long, Float, Short, Int)) => v
     val combinerMergeValue = (acc: (Long, Float, Short, Int), v: (Long, Float, Short, Int)) => {
       val sumMillis: Long = acc._1 + v._1
@@ -40,23 +38,36 @@ object TaxiRideAvgCombineByKey {
     }
     val combinerMergeCombiners = (acc1: (Long, Float, Short, Int), acc2: (Long, Float, Short, Int)) => {
       val sumCount: Int = acc1._4 + acc2._4
-      val avgMillis: Long = (acc1._1 + acc2._1) / sumCount
-      val avgDistance: Float = (acc1._2 + acc2._2) / sumCount
-      val avgPassenger = (acc1._3 + acc2._3) / sumCount
+      val avgMillis: Long = (acc1._1 + acc2._1)
+      val avgDistance: Float = (acc1._2 + acc2._2)
+      val avgPassenger = (acc1._3 + acc2._3)
       (avgMillis, avgDistance, avgPassenger.toShort, sumCount)
     }
-    val countStream = driverStream.combineByKey(combiner, combinerMergeValue, combinerMergeCombiners, new HashPartitioner(4))
-
-    val toString = (v: (Long, (Long, Float, Short, Int))) => {
+    val averageFunction = (v: (Long, (Long, Float, Short, Int))) => {
+      val avgMillis: Long = v._2._1 / v._2._4
+      val avgDistance: Float = v._2._2 / v._2._4
+      val avgPassenger: Float = v._2._3 / v._2._4
+      (v._1, (avgMillis, avgDistance, avgPassenger, v._2._4))
+    }
+    val toString = (v: (Long, (Long, Float, Float, Int))) => {
       val driverId: Long = v._1
       val avgMillis: Long = v._2._1
       val avgDistance: Float = v._2._2
-      val avgPassenger: Short = v._2._3
+      val avgPassenger: Float = v._2._3
       val sumCount: Int = v._2._4
       "DriverID[" + driverId + "] AvgTripTime[" + avgMillis + "] AvgDistance[" + avgDistance + "] AvgPassengers[" + avgPassenger + "] SumEvents[" + sumCount + "]"
     }
-    val result = countStream.map(toString)
 
+    // map TaxiRide stream to values of distance, time trip and passengers
+    val driverStream = stream.map(driverIdTaxiRide)
+    // sum values of the stream using combineByKey
+    val countStream = driverStream.combineByKey(combiner, combinerMergeValue, combinerMergeCombiners, new HashPartitioner(4))
+    // calculate the average
+    val averageResult = countStream.map(averageFunction)
+    // map tuples to a string message readable
+    val result = averageResult.map(toString)
+
+    // emits the result
     if (outputMqtt) {
       println("Use the command below to consume data:")
       println("mosquitto_sub -h " + host + " -p 1883 -t " + mqttTopic)
