@@ -10,10 +10,6 @@ import org.apache.spark.streaming.receiver._
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 
-case class TaxiRide(rideId: Long, isStart: Boolean, startTime: DateTime, endTime: DateTime,
-                    startLon: Float, startLat: Float, endLon: Float, endLat: Float,
-                    passengerCnt: Short, taxiId: Long, driverId: Long)
-
 object TimeFormatter {
   val timeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.US).withZoneUTC()
 }

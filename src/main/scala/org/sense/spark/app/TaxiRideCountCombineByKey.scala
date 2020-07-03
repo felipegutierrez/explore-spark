@@ -29,8 +29,7 @@ object TaxiRideCountCombineByKey {
 
     val combiner = (v: Int) => v
     val combinerMergeValue = (acc: Int, v: Int) => acc + v
-    val combinerMergeCombiners = (acc1: Int, acc2: Int) => acc1 + acc2
-    val countStream = driverStream.combineByKey(combiner, combinerMergeValue, combinerMergeCombiners, new HashPartitioner(4))
+    val countStream = driverStream.combineByKey(combiner, combinerMergeValue, combinerMergeValue, new HashPartitioner(4))
 
     if (outputMqtt) {
       println("Use the command below to consume data:")
