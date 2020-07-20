@@ -1,9 +1,7 @@
-package org.sense.spark.app
+package org.sense.spark.app.tests
 
 import com.twitter.algebird.HyperLogLogMonoid
 import com.twitter.algebird.HyperLogLog.int2Bytes
-
-
 /**
   * we were able to call hll.create on an Int because we imported the implicit conversion int2Bytes that converts an Int into a Array[Byte].
   */

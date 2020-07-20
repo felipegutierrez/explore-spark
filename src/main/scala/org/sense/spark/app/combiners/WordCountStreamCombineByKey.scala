@@ -1,4 +1,4 @@
-package org.sense.spark.app
+package org.sense.spark.app.combiners
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.{Seconds, StreamingContext}
@@ -7,8 +7,7 @@ import org.apache.spark.{HashPartitioner, SparkConf}
 import scala.collection.mutable.Queue
 
 object WordCountStreamCombineByKey {
-  def main(args: Array[String]): Unit = {
-
+  def run(): Unit = {
     // StreamingExamples.setStreamingLogLevels()
 
     // Create a local StreamingContext with two working thread and batch interval of 1 second.

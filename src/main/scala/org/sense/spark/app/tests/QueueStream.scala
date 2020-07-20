@@ -1,4 +1,4 @@
-package org.sense.spark.app
+package org.sense.spark.app.tests
 
 import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD

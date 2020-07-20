@@ -1,4 +1,4 @@
-package org.sense.spark.app
+package org.sense.spark.app.combiners
 
 import org.apache.spark.streaming.{Milliseconds, StreamingContext}
 import org.apache.spark.{HashPartitioner, SparkConf}
@@ -12,8 +12,16 @@ object TaxiRideCountCombineByKey {
   val qos: QoS = QoS.AT_LEAST_ONCE
 
   def main(args: Array[String]): Unit = {
+    TaxiRideCountCombineByKey.run()
+  }
 
-    val outputMqtt: Boolean = if (args.length > 0 && args(0).equals("mqtt")) true else false
+  def run(): Unit = {
+    run("default")
+  }
+
+  def run(output: String): Unit = {
+
+    val outputMqtt: Boolean = if ("mqtt".equals(output)) true else false
 
     // Create a local StreamingContext with two working thread and batch interval of 1 second.
     // The master requires 4 cores to prevent from a starvation scenario.

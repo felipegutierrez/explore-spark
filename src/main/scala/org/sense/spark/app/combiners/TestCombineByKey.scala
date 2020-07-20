@@ -1,4 +1,4 @@
-package org.sense.spark.app
+package org.sense.spark.app.combiners
 
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
 import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
