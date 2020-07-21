@@ -6,9 +6,11 @@ scalaVersion := "2.12.3"
 
 val sparkVersion = "3.0.0"
 
+// remove "provided" flag in order to test using the Intellij IDEA
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
+  "io.dropwizard.metrics" % "metrics-core" % "4.1.11" % "provided",
   "com.twitter" %% "algebird-core" % "0.13.7",
   "joda-time" % "joda-time" % "2.5",
   "org.fusesource.mqtt-client" % "mqtt-client" % "1.16"

@@ -1,19 +1,15 @@
 package org.sense.spark.app.combiners
 
 import org.apache.spark.streaming.{Milliseconds, StreamingContext}
-import org.apache.spark.{HashPartitioner, SparkConf}
+import org.apache.spark.{HashPartitioner, SparkConf, SparkEnv}
 import org.fusesource.mqtt.client.QoS
-import org.sense.spark.util.{MqttSink, TaxiRide, TaxiRideSource}
+import org.sense.spark.util.{CustomMetricSparkPlugin, MqttSink, TaxiRide, TaxiRideSource}
 
 object TaxiRideCountCombineByKey {
 
   val mqttTopic: String = "spark-mqtt-sink"
   val host: String = "127.0.0.1";
   val qos: QoS = QoS.AT_LEAST_ONCE
-
-  def main(args: Array[String]): Unit = {
-    TaxiRideCountCombineByKey.run()
-  }
 
   def run(): Unit = {
     run("default")
@@ -26,14 +22,22 @@ object TaxiRideCountCombineByKey {
     // Create a local StreamingContext with two working thread and batch interval of 1 second.
     // The master requires 4 cores to prevent from a starvation scenario.
     val sparkConf = new SparkConf()
-      .setAppName("TaxiRideCountCombineByKey")
       .setMaster("local[4]")
+      .set("spark.plugins", "org.sense.spark.util.CustomMetricSparkPlugin")
+      // .set("spark.metrics.conf", "src/main/resources/metrics.properties")
+      .setAppName(TaxiRideCountCombineByKey.getClass.getSimpleName)
+
     val ssc = new StreamingContext(sparkConf, Milliseconds(1000))
 
     val stream = ssc.receiverStream(new TaxiRideSource()).cache()
 
-    val driverIdTaxiRide = (taxiRide: TaxiRide) => (taxiRide.driverId, 1)
-    val driverStream = stream.map(driverIdTaxiRide)
+    var evenCount = 0
+    val driverIdTaxiRideMap = (taxiRide: TaxiRide) => {
+      evenCount = evenCount + 1
+      CustomMetricSparkPlugin.value.inc(evenCount)
+      (taxiRide.driverId, 1)
+    }
+    val driverStream = stream.map(driverIdTaxiRideMap)
 
     val combiner = (v: Int) => v
     val combinerMergeValue = (acc: Int, v: Int) => acc + v
@@ -52,6 +56,8 @@ object TaxiRideCountCombineByKey {
     } else {
       countStream.print()
     }
+
+    SparkEnv.get.metricsSystem.report
     ssc.start() // Start the computation
     ssc.awaitTermination() // Wait for the computation to terminate
   }

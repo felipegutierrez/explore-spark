@@ -1,6 +1,7 @@
 package org.sense.spark.app
 
 import org.sense.spark.app.combiners.{TaxiRideAvgCombineByKey, TaxiRideCountCombineByKey, WordCountStreamCombineByKey}
+import org.sense.spark.app.tests.CustomMetricExample
 
 object App {
   def main(args: Array[String]): Unit = {
@@ -11,6 +12,7 @@ object App {
         case 1 => WordCountStreamCombineByKey.run()
         case 2 => TaxiRideCountCombineByKey.run("mqtt")
         case 3 => TaxiRideAvgCombineByKey.run("mqtt")
+        case 4 => CustomMetricExample.run()
         case _ => println("Invalid application.")
       }
     } else {
@@ -18,6 +20,7 @@ object App {
       println("org.sense.spark.app.App -app 1: WordCountStreamCombineByKey")
       println("-app 2: TaxiRideCountCombineByKey")
       println("-app 3: TaxiRideAvgCombineByKey")
+      println("-app 4: CustomMetricExample")
     }
   }
 }

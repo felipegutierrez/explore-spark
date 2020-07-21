@@ -33,7 +33,7 @@ $ ./bin/spark-submit --master spark://127.0.0.1:7077 --deploy-mode cluster --dri
     /home/felipe/workspace-idea/explore-spark/target/scala-2.12/explore-spark_2.12-0.2.jar
     -app [1|2|3]
 ```
-After submitting the Spark application you will see its ID at the section "Running Drivers" on the web console. Only after submitting one application you also can see its job status at the web UI [http://127.0.0.1:4040/](http://127.0.0.1:4040/).
+After submitting the Spark application you will see its ID at the section "Running Drivers" on the web console. Only after submitting one application you also can see its job status at the web UI [http://127.0.0.1:4040/](http://127.0.0.1:4040/). Details of the Spark job "local-1595340043797" and its stages can be visualized at [http://127.0.0.1:4040/api/v1/applications/local-1595340043797/stages](http://127.0.0.1:4040/api/v1/applications/local-1595340043797/stages).
 
 
 
