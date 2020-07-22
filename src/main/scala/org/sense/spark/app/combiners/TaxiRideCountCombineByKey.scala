@@ -1,5 +1,6 @@
 package org.sense.spark.app.combiners
 
+import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.{Milliseconds, StreamingContext}
 import org.apache.spark.{HashPartitioner, SparkConf, SparkEnv}
 import org.fusesource.mqtt.client.QoS
@@ -24,25 +25,30 @@ object TaxiRideCountCombineByKey {
     val sparkConf = new SparkConf()
       .setMaster("local[4]")
       .set("spark.plugins", "org.sense.spark.util.CustomMetricSparkPlugin")
-      // .set("spark.metrics.conf", "src/main/resources/metrics.properties")
       .setAppName(TaxiRideCountCombineByKey.getClass.getSimpleName)
 
     val ssc = new StreamingContext(sparkConf, Milliseconds(1000))
+    println("defaultParallelism: " + ssc.sparkContext.defaultParallelism)
+    println("defaultMinPartitions: " + ssc.sparkContext.defaultMinPartitions)
 
-    val stream = ssc.receiverStream(new TaxiRideSource()).cache()
+    val stream: DStream[TaxiRide] = ssc.receiverStream(new TaxiRideSource()).cache()
 
     var evenCount = 0
+    // UDFs
     val driverIdTaxiRideMap = (taxiRide: TaxiRide) => {
       evenCount = evenCount + 1
       CustomMetricSparkPlugin.value.inc(evenCount)
       (taxiRide.driverId, 1)
     }
-    val driverStream = stream.map(driverIdTaxiRideMap)
-
     val combiner = (v: Int) => v
     val combinerMergeValue = (acc: Int, v: Int) => acc + v
-    val countStream = driverStream.combineByKey(combiner, combinerMergeValue, combinerMergeValue, new HashPartitioner(4))
 
+    // DAG
+    val driverStream: DStream[(Long, Int)] = stream.map(driverIdTaxiRideMap)
+    val countStream: DStream[(Long, Int)] = driverStream
+      .combineByKey(combiner, combinerMergeValue, combinerMergeValue, new HashPartitioner(4))
+
+    // Emmit results
     if (outputMqtt) {
       println("Use the command below to consume data:")
       println("mosquitto_sub -h " + host + " -p 1883 -t " + mqttTopic)
