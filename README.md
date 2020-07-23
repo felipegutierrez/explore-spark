@@ -37,10 +37,10 @@ $ ./bin/spark-submit \
     --conf spark.streaming.receiver.maxRate=10000 \
     --conf spark.streaming.dynamicAllocation.enabled=true \
     --conf spark.streaming.kafka.maxRatePerPartition=100 \
-    --jars /home/flink/spark-3.0.0-bin-hadoop2.7/jars/mqtt-client-1.16.jar,/home/flink/spark-3.0.0-bin-hadoop2.7/jars/hawtbuf-1.11.jar,/home/flink/spark-3.0.0-bin-hadoop2.7/jars/hawtdispatch-1.22.jar,/home/flink/spark-3.0.0-bin-hadoop2.7/jars/hawtdispatch-transport-1.22.jar \
+    --jars /home/flink/spark-3.0.0-bin-hadoop2.7/jars/mqtt-client-1.16.jar,/home/flink/spark-3.0.0-bin-hadoop2.7/jars/hawtbuf-1.11.jar,/home/flink/spark-3.0.0-bin-hadoop2.7/jars/hawtdispatch-1.22.jar,/home/flink/spark-3.0.0-bin-hadoop2.7/jars/hawtdispatch-transport-1.22.jar,/home/flink/spark-3.0.0-bin-hadoop2.7/jars/kafka-clients-0.10.0.0.jar \
     --conf "spark.driver.extraJavaOptions=-javaagent:/home/flink/spark-3.0.0-bin-hadoop2.7/jars/jmx_prometheus_javaagent-0.13.0.jar=8082:/home/flink/spark-3.0.0-bin-hadoop2.7/conf/spark.yml" \
     --name "App" \
-    /home/felipe/workspace-idea/explore-spark/target/scala-2.12/explore-spark_2.12-0.2.jar -app [1|2|3|4]
+    /home/felipe/workspace-idea/explore-spark/target/scala-2.12/explore-spark_2.12-0.2.jar -app [1|2|3|4|5] -input [default|kafka] -output [default|mqtt]
 ```
 After submitting the Spark application you will see its ID at the section "Running Drivers" on the web console. Only after submitting one application you also can see its job status at the web UI [http://127.0.0.1:4040/](http://127.0.0.1:4040/). Details of the Spark job "local-1595340043797" and its stages can be visualized at [http://127.0.0.1:4040/api/v1/applications/local-1595340043797/stages](http://127.0.0.1:4040/api/v1/applications/local-1595340043797/stages).
 

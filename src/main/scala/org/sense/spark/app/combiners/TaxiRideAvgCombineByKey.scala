@@ -11,10 +11,10 @@ object TaxiRideAvgCombineByKey {
   val qos: QoS = QoS.AT_LEAST_ONCE
 
   def run(): Unit = {
-    run("default")
+    run("default", "default")
   }
 
-  def run(output: String): Unit = {
+  def run(input: String, output: String): Unit = {
 
     val outputMqtt: Boolean = if ("mqtt".equals(output)) true else false
 
