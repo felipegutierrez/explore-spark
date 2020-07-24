@@ -78,9 +78,9 @@ object TaxiRideAvgCombineByKey {
       println("mosquitto_sub -h " + host + " -p 1883 -t " + mqttTopic)
 
       val mqttSink = ssc.sparkContext.broadcast(MqttSink(host))
-      result.foreachRDD { rdd =>
-        rdd.foreach { message =>
-          mqttSink.value.send(mqttTopic, message)
+      countStream.foreachRDD { rdd =>
+        rdd.foreachPartition { partitionOfRecords =>
+          partitionOfRecords.foreach(message => mqttSink.value.send(mqttTopic, message.toString()))
         }
       }
     } else {

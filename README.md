@@ -44,6 +44,24 @@ $ ./bin/spark-submit \
 ```
 After submitting the Spark application you will see its ID at the section "Running Drivers" on the web console. Only after submitting one application you also can see its job status at the web UI [http://127.0.0.1:4040/](http://127.0.0.1:4040/). Details of the Spark job "local-1595340043797" and its stages can be visualized at [http://127.0.0.1:4040/api/v1/applications/local-1595340043797/stages](http://127.0.0.1:4040/api/v1/applications/local-1595340043797/stages).
 
+### Kafka producer
 
+```
+cd /home/felipe/Servers/kafka_2.13-2.5.0
+
+# start zookeeper server
+./bin/zookeeper-server-start.sh ./config/zookeeper.properties
+
+# start broker
+./bin/kafka-server-start.sh ./config/server.properties
+
+# create topic "topic-kafka-taxi-ride"
+./bin/kafka-topics.sh --create --topic topic-kafka-taxi-ride --zookeeper localhost:2181 --partitions 1 --replication-factor 1
+
+# consume from the topic using the console producer
+./bin/kafka-console-consumer.sh --topic topic-kafka-taxi-ride --bootstrap-server localhost:2181
+
+# then launch Spark and the spark stream job
+```
 
 

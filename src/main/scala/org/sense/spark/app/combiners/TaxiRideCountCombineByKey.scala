@@ -80,8 +80,8 @@ object TaxiRideCountCombineByKey {
         println("mosquitto_sub -h " + host + " -p 1883 -t " + mqttTopic)
         val mqttSink = ssc.sparkContext.broadcast(MqttSink(host))
         countStream.foreachRDD { rdd =>
-          rdd.foreach { message =>
-            mqttSink.value.send(mqttTopic, message.toString())
+          rdd.foreachPartition { partitionOfRecords =>
+            partitionOfRecords.foreach(message => mqttSink.value.send(mqttTopic, message.toString()))
           }
         }
       case _ => println("Error: No output defined.")

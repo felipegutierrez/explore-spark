@@ -17,6 +17,16 @@ libraryDependencies ++= Seq(
   "org.fusesource.mqtt-client" % "mqtt-client" % "1.16"
 )
 
+assemblyExcludedJars in assembly := {
+  val cp = (fullClasspath in assembly).value
+  cp filter { f =>
+    f.data.getName.contains("spark") ||
+      f.data.getName == "spark-streaming_2.12-3.0.0.jar" ||
+      f.data.getName == "spark-sql_2.12-3.0.0.jar" ||
+      f.data.getName == "spark-streaming-kafka-0-10_2.12-3.0.0.jar"
+  }
+}
+
 mainClass in(Compile, packageBin) := Some("org.sense.spark.app.App")
 mainClass in assembly := Some("org.sense.spark.app.App")
 
