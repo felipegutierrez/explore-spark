@@ -14,7 +14,7 @@ object WordCountStreamCombineByKey {
     // The master requires 4 cores to prevent from a starvation scenario.
     val sparkConf = new SparkConf()
       .setAppName("QueueStreamWordCount")
-      .setMaster("local[4]")
+      // .setMaster("local[4]") // load from conf/spark-defaults.conf
     val ssc = new StreamingContext(sparkConf, Seconds(1))
 
     // Create a DStream that will connect to hostname:port, like localhost:9999

@@ -11,10 +11,10 @@ object TaxiRideAvgCombineByKey {
   val qos: QoS = QoS.AT_LEAST_ONCE
 
   def run(): Unit = {
-    run(Utils.VALUE_DEFAULT, Utils.VALUE_DEFAULT, Utils.VALUE_MASTER)
+    run(Utils.VALUE_DEFAULT, Utils.VALUE_DEFAULT)
   }
 
-  def run(input: String, output: String, master: String): Unit = {
+  def run(input: String, output: String): Unit = {
 
     val outputMqtt: Boolean = if ("mqtt".equals(output)) true else false
 
@@ -22,7 +22,7 @@ object TaxiRideAvgCombineByKey {
     // The master requires 4 cores to prevent from a starvation scenario.
     val sparkConf = new SparkConf()
       .setAppName(TaxiRideAvgCombineByKey.getClass.getSimpleName)
-      .setMaster(master) // "local[4]" or "spark://master:7077"
+    // .setMaster(master) // load from conf/spark-defaults.conf
     val ssc = new StreamingContext(sparkConf, Milliseconds(1000))
 
     val stream = ssc.receiverStream(new TaxiRideSource()).cache()

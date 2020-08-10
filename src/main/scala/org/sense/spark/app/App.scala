@@ -36,8 +36,8 @@ object App {
       if (args.length >= 2) {
         app match {
           case 1 => WordCountStreamCombineByKey.run()
-          case 2 => TaxiRideCountCombineByKey.run(input, output, master)
-          case 3 => TaxiRideAvgCombineByKey.run(input, output, master)
+          case 2 => TaxiRideCountCombineByKey.run(input, output)
+          case 3 => TaxiRideAvgCombineByKey.run(input, output)
           case 4 => CustomMetricExample.run()
           case 5 => new TaxiRideKafkaProducer(maxCount)
           case _ => println("Invalid application.")
