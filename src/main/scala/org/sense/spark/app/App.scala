@@ -13,6 +13,7 @@ object App {
       var maxCount: Int = Utils.VALUE_MAX_COUNT
       var input: String = Utils.VALUE_DEFAULT
       var output: String = Utils.VALUE_MQTT
+      var master: String = Utils.VALUE_MASTER
       while (i < args.length) {
         if (Utils.PARAMETER_APP.equals(args(i))) {
           i += 1
@@ -26,14 +27,17 @@ object App {
         } else if (Utils.PARAMETER_COUNT.equals(args(i))) {
           i += 1
           maxCount = args(i).toInt
+        } else if (Utils.PARAMETER_MASTER.equals(args(i))) {
+          i += 1
+          master = args(i)
         }
         i += 1
       }
       if (args.length >= 2) {
         app match {
           case 1 => WordCountStreamCombineByKey.run()
-          case 2 => TaxiRideCountCombineByKey.run(input, output)
-          case 3 => TaxiRideAvgCombineByKey.run(input, output)
+          case 2 => TaxiRideCountCombineByKey.run(input, output, master)
+          case 3 => TaxiRideAvgCombineByKey.run(input, output, master)
           case 4 => CustomMetricExample.run()
           case 5 => new TaxiRideKafkaProducer(maxCount)
           case _ => println("Invalid application.")

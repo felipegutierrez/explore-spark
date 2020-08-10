@@ -18,15 +18,15 @@ object TaxiRideCountCombineByKey {
   val qos: QoS = QoS.AT_LEAST_ONCE
 
   def run(): Unit = {
-    run("default", "default")
+    run(Utils.VALUE_DEFAULT, Utils.VALUE_DEFAULT, Utils.VALUE_MASTER)
   }
 
-  def run(input: String, output: String): Unit = {
+  def run(input: String, output: String, master: String): Unit = {
 
     // Create a local StreamingContext with two working thread and batch interval of 1 second.
     // The master requires 4 cores to prevent from a starvation scenario.
     val sparkConf = new SparkConf()
-      .setMaster("local[4]")
+      .setMaster(master) // "local[4]" or "spark://127.0.0.1:7077"
       .set("spark.plugins", "org.sense.spark.util.CustomMetricSparkPlugin")
       .setAppName(TaxiRideCountCombineByKey.getClass.getSimpleName)
 

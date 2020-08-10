@@ -3,7 +3,7 @@ package org.sense.spark.app.combiners
 import org.apache.spark.streaming.{Milliseconds, StreamingContext}
 import org.apache.spark.{HashPartitioner, SparkConf}
 import org.fusesource.mqtt.client.QoS
-import org.sense.spark.util.{MqttSink, TaxiRide, TaxiRideSource}
+import org.sense.spark.util.{MqttSink, TaxiRide, TaxiRideSource, Utils}
 
 object TaxiRideAvgCombineByKey {
   val mqttTopic: String = "spark-mqtt-sink"
@@ -11,18 +11,18 @@ object TaxiRideAvgCombineByKey {
   val qos: QoS = QoS.AT_LEAST_ONCE
 
   def run(): Unit = {
-    run("default", "default")
+    run(Utils.VALUE_DEFAULT, Utils.VALUE_DEFAULT, Utils.VALUE_MASTER)
   }
 
-  def run(input: String, output: String): Unit = {
+  def run(input: String, output: String, master: String): Unit = {
 
     val outputMqtt: Boolean = if ("mqtt".equals(output)) true else false
 
     // Create a local StreamingContext with two working thread and batch interval of 1 second.
     // The master requires 4 cores to prevent from a starvation scenario.
     val sparkConf = new SparkConf()
-      .setAppName("TaxiRideCountCombineByKey")
-      .setMaster("local[4]")
+      .setAppName(TaxiRideAvgCombineByKey.getClass.getSimpleName)
+      .setMaster(master) // "local[4]" or "spark://master:7077"
     val ssc = new StreamingContext(sparkConf, Milliseconds(1000))
 
     val stream = ssc.receiverStream(new TaxiRideSource()).cache()
