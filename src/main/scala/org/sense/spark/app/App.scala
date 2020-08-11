@@ -2,6 +2,7 @@ package org.sense.spark.app
 
 import org.sense.spark.app.combiners.{TaxiRideAvgCombineByKey, TaxiRideCountCombineByKey, WordCountStreamCombineByKey}
 import org.sense.spark.app.pattern.LogParser
+import org.sense.spark.app.sql.LogSQLParser
 import org.sense.spark.app.tests.CustomMetricExample
 import org.sense.spark.kafka.TaxiRideKafkaProducer
 import org.sense.spark.util.Utils
@@ -44,6 +45,7 @@ object App {
           case 4 => CustomMetricExample.run()
           case 5 => new TaxiRideKafkaProducer(maxCount)
           case 6 => LogParser.run(input, output)
+          case 7 => LogSQLParser.run(input, output)
           case _ => println("Invalid application.")
         }
       } else {
@@ -54,6 +56,7 @@ object App {
         println("-app 4: " + CustomMetricExample.getClass.getSimpleName)
         println("-app 5: TaxiRideKafkaProducer")
         println("-app 6: " + LogParser.getClass.getSimpleName)
+        println("-app 7: " + LogSQLParser.getClass.getSimpleName)
       }
     }
   }

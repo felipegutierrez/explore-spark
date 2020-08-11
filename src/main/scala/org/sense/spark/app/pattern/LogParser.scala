@@ -1,6 +1,6 @@
 package org.sense.spark.app.pattern
 
-import java.util.regex.{Matcher, Pattern}
+import java.util.regex.Matcher
 
 import org.apache.log4j.Level
 import org.apache.spark.SparkConf
@@ -29,7 +29,7 @@ object LogParser {
       .setAppName(LogParser.getClass.getSimpleName)
 
     // Construct a regular expression (regex) to extract fields from raw Apache log lines
-    val pattern = apacheLogPattern()
+    val pattern = Utils.apacheLogPattern()
 
     val ssc = new StreamingContext(sparkConf, Seconds(1))
     ssc.sparkContext.setLogLevel(Level.ERROR.toString)
@@ -59,21 +59,5 @@ object LogParser {
     ssc.checkpoint("/tmp/spark/checkpoint/")
     ssc.start()
     ssc.awaitTermination()
-  }
-
-  /** Retrieves a regex Pattern for parsing Apache access logs. */
-  def apacheLogPattern(): Pattern = {
-    val ddd = "\\d{1,3}"
-    val ip = s"($ddd\\.$ddd\\.$ddd\\.$ddd)?"
-    val client = "(\\S+)"
-    val user = "(\\S+)"
-    val dateTime = "(\\[.+?\\])"
-    val request = "\"(.*?)\""
-    val status = "(\\d{3})"
-    val bytes = "(\\S+)"
-    val referer = "\"(.*?)\""
-    val agent = "\"(.*?)\""
-    val regex = s"$ip $client $user $dateTime $request $status $bytes $referer $agent"
-    Pattern.compile(regex)
   }
 }

@@ -1,5 +1,7 @@
 package org.sense.spark.util
 
+import java.util.regex.Pattern
+
 object Utils {
   val PARAMETER_APP: String = "-app"
   val PARAMETER_INPUT: String = "-input"
@@ -17,4 +19,20 @@ object Utils {
   val TOPIC_KAFKA: String = "topic-kafka"
   val TOPIC_KAFKA_TAXI_RIDE: String = "topic-kafka-taxi-ride"
   val TOPIC_MQTT_SINK: String = "spark-mqtt-sink"
+
+  /** Retrieves a regex Pattern for parsing Apache access logs. */
+  def apacheLogPattern(): Pattern = {
+    val ddd = "\\d{1,3}"
+    val ip = s"($ddd\\.$ddd\\.$ddd\\.$ddd)?"
+    val client = "(\\S+)"
+    val user = "(\\S+)"
+    val dateTime = "(\\[.+?\\])"
+    val request = "\"(.*?)\""
+    val status = "(\\d{3})"
+    val bytes = "(\\S+)"
+    val referer = "\"(.*?)\""
+    val agent = "\"(.*?)\""
+    val regex = s"$ip $client $user $dateTime $request $status $bytes $referer $agent"
+    Pattern.compile(regex)
+  }
 }
