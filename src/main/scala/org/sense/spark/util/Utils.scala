@@ -9,6 +9,7 @@ object Utils {
 
   val VALUE_DEFAULT: String = "default"
   val VALUE_MQTT: String = "mqtt"
+  val VALUE_FILE: String = "file"
   val VALUE_KAFKA: String = "kafka"
   val VALUE_MAX_COUNT: Int = 0
   val VALUE_MASTER: String = "local[*]"

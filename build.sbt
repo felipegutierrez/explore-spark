@@ -8,7 +8,7 @@ val sparkVersion = "3.0.0"
 
 // remove "provided" flag in order to test using the Intellij IDEA
 libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-streaming" % sparkVersion % "provided",
+  "org.apache.spark" %% "spark-streaming" % sparkVersion % "provided",  
   "org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion % "provided",
   "io.dropwizard.metrics" % "metrics-core" % "4.1.11" % "provided",

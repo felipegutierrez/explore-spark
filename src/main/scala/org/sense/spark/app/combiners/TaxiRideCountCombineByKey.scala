@@ -2,6 +2,7 @@ package org.sense.spark.app.combiners
 
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.apache.log4j.Level
 import org.apache.spark.streaming.dstream.{DStream, InputDStream}
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
@@ -22,15 +23,15 @@ object TaxiRideCountCombineByKey {
   }
 
   def run(input: String, output: String): Unit = {
-
     // Create a local StreamingContext with two working thread and batch interval of 1 second.
     // The master requires 4 cores to prevent from a starvation scenario.
     val sparkConf = new SparkConf()
-      // .setMaster(master) // load from conf/spark-defaults.conf
+      .setMaster("local[*]") // load from conf/spark-defaults.conf
       .set("spark.plugins", "org.sense.spark.util.CustomMetricSparkPlugin")
       .setAppName(TaxiRideCountCombineByKey.getClass.getSimpleName)
 
     val ssc = new StreamingContext(sparkConf, Milliseconds(1000))
+    ssc.sparkContext.setLogLevel(Level.ERROR.toString)
     println("defaultParallelism: " + ssc.sparkContext.defaultParallelism)
     println("defaultMinPartitions: " + ssc.sparkContext.defaultMinPartitions)
 
@@ -84,6 +85,13 @@ object TaxiRideCountCombineByKey {
             partitionOfRecords.foreach(message => mqttSink.value.send(mqttTopic, message.toString()))
           }
         }
+      case Utils.VALUE_FILE =>
+        countStream.foreachRDD((rdd, time) => {
+          if (rdd.count() > 0) {
+            val repartitionedRDD = rdd.repartition(1).cache()
+            repartitionedRDD.saveAsTextFile("output/" + TaxiRideCountCombineByKey.getClass.getSimpleName + "_" + time.milliseconds.toString)
+          }
+        })
       case _ => println("Error: No output defined.")
     }
 

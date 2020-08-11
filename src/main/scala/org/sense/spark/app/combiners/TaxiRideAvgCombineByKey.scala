@@ -22,7 +22,7 @@ object TaxiRideAvgCombineByKey {
     // The master requires 4 cores to prevent from a starvation scenario.
     val sparkConf = new SparkConf()
       .setAppName(TaxiRideAvgCombineByKey.getClass.getSimpleName)
-    // .setMaster(master) // load from conf/spark-defaults.conf
+    // .setMaster("local[*]") // load from conf/spark-defaults.conf
     val ssc = new StreamingContext(sparkConf, Milliseconds(1000))
 
     val stream = ssc.receiverStream(new TaxiRideSource()).cache()

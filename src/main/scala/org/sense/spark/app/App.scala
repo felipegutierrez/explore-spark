@@ -6,7 +6,9 @@ import org.sense.spark.kafka.TaxiRideKafkaProducer
 import org.sense.spark.util.Utils
 
 object App {
+
   def main(args: Array[String]): Unit = {
+
     if (args != null && args.length > 0) {
       var i: Int = 0
       var app: Int = 0
