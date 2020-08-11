@@ -197,3 +197,5 @@ project/plugins/project/
 
 # End of https://www.gitignore.io/api/sbt,java,scala,eclipse,intellij
 
+output**
+
