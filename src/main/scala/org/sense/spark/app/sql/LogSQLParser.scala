@@ -28,7 +28,7 @@ object LogSQLParser {
   def run(input: String, output: String): Unit = {
     val sparkConf = new SparkConf()
       .setMaster("local[*]") // load from conf/spark-defaults.conf
-      .set("spark.sql.warehouse.dir", "/tmp/spark/sql/warehouse")
+      // .set("spark.sql.warehouse.dir", "/tmp/spark/sql/warehouse") // this is only for windows
       .setAppName(LogSQLParser.getClass.getSimpleName)
     val ssc = new StreamingContext(sparkConf, Seconds(1))
     ssc.sparkContext.setLogLevel(Level.ERROR.toString)
