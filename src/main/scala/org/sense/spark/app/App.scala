@@ -1,6 +1,7 @@
 package org.sense.spark.app
 
 import org.sense.spark.app.combiners.{TaxiRideAvgCombineByKey, TaxiRideCountCombineByKey, WordCountStreamCombineByKey}
+import org.sense.spark.app.pattern.LogParser
 import org.sense.spark.app.tests.CustomMetricExample
 import org.sense.spark.kafka.TaxiRideKafkaProducer
 import org.sense.spark.util.Utils
@@ -42,15 +43,17 @@ object App {
           case 3 => TaxiRideAvgCombineByKey.run(input, output)
           case 4 => CustomMetricExample.run()
           case 5 => new TaxiRideKafkaProducer(maxCount)
+          case 6 => LogParser.run(input, output)
           case _ => println("Invalid application.")
         }
       } else {
         println("Please run the program and specify an application to launch at the Spark cluster.")
         println("org.sense.spark.app.App -app 1: WordCountStreamCombineByKey")
-        println("-app 2: TaxiRideCountCombineByKey")
-        println("-app 3: TaxiRideAvgCombineByKey")
-        println("-app 4: CustomMetricExample")
+        println("-app 2: " + TaxiRideCountCombineByKey.getClass.getSimpleName)
+        println("-app 3: " + TaxiRideAvgCombineByKey.getClass.getSimpleName)
+        println("-app 4: " + CustomMetricExample.getClass.getSimpleName)
         println("-app 5: TaxiRideKafkaProducer")
+        println("-app 6: " + LogParser.getClass.getSimpleName)
       }
     }
   }
