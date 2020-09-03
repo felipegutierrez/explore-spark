@@ -1,3 +1,6 @@
+
+[![Build Status](https://api.travis-ci.org/felipegutierrez/explore-spark.svg?branch=master)](https://travis-ci.org/felipegutierrez/explore-spark)
+
 # explore-spark
 
 ### Requirements

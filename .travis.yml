@@ -1,0 +1,9 @@
+language: scala
+sudo: false
+scala: 2.12.7
+branches:
+  only:
+    - master
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION package
+
