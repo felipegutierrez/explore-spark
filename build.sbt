@@ -2,7 +2,7 @@ name := "explore-spark"
 version := "0.4"
 scalaVersion := "2.12.7"
 
-val sparkVersion = "3.0.0"
+val sparkVersion = "3.0.1"
 val log4jVersion = "2.4.1"
 val dropwizardVersion = "4.1.11"
 val twitterVersion = "0.13.7"
@@ -19,9 +19,12 @@ resolvers ++= Seq(
 
 // remove "provided" flag in order to test using the Intellij IDEA
 libraryDependencies ++= Seq(
+  // Spark
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-streaming" % sparkVersion, // % "provided",
   "org.apache.spark" %% "spark-sql" % sparkVersion, // % "provided",
+
+  // Spark - Kafka
   "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion, // % "provided",
 
   // logging
@@ -31,7 +34,7 @@ libraryDependencies ++= Seq(
   // postgres for DB connectivity
   "org.postgresql" % "postgresql" % postgresVersion,
 
-  // dropwizard
+  // dropwizard metrics
   "io.dropwizard.metrics" % "metrics-core" % dropwizardVersion, // % "provided",
 
   // twitter
@@ -40,7 +43,7 @@ libraryDependencies ++= Seq(
   // joda
   "joda-time" % "joda-time" % jodaVersion,
 
-  // mqtt
+  // MQTT broker
   "org.fusesource.mqtt-client" % "mqtt-client" % fusesourceVersion,
 )
 
