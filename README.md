@@ -10,15 +10,27 @@
 This project is using [Spark 3.0.0](https://spark.apache.org/releases/spark-release-3-0-0.html). The requirements are: JDK 1.8, Scala 2.12.7, and sbt 1.3.12.
 
 ### Compile and Execute the project
+
+Starting the postgresql
 ```
-sbt compile
-sbt run
+docker-compose up
+./psql.sh
 ```
-### Create the jar file of the project
+Starting the Spark cluster with 3 nodes
 ```
-sbt package
-sbt assembly // for fat jar files (with dependencies)
+cd spark-cluster$
+docker-compose up --scale spark-worker=3
 ```
+
+
+
+
+
+
+
+
+
+
 ### Configuring Prometheus on file `/etc/prometheus/prometheus.yml` to scrape metrics from Spark:
 ```
 scrape_configs:
