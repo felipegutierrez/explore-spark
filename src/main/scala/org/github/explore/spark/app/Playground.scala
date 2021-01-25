@@ -4,9 +4,9 @@ import org.apache.spark.sql.types._
 import org.apache.spark.sql.{Row, SparkSession}
 
 object Playground {
-  def main(args: Array[String]): Unit = {
-    run()
-  }
+//  def main(args: Array[String]): Unit = {
+//    run()
+//  }
 
   def run() = {
     /**
