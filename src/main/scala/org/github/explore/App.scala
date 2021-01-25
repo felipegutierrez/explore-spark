@@ -1,66 +1,74 @@
 package org.github.explore
 
+import org.github.explore.spark.app.Playground
 import org.github.explore.spark.app.combiners.{TaxiRideAvgCombineByKey, TaxiRideCountCombineByKey, WordCountStreamCombineByKey}
 import org.github.explore.spark.app.pattern.LogParser
 import org.github.explore.spark.app.sql.LogSQLParser
 import org.github.explore.spark.app.structure.StructuredStreaming
 import org.github.explore.spark.app.tests.CustomMetricExample
+import org.github.explore.spark.dataframes.DataFramesBasics
 import org.github.explore.spark.kafka.TaxiRideKafkaProducer
 import org.github.explore.spark.util.Utils
+
+import java.util.Scanner
 
 object App {
 
   def main(args: Array[String]): Unit = {
 
-    if (args != null && args.length > 0) {
-      var i: Int = 0
-      var app: Int = 0
-      var maxCount: Int = Utils.VALUE_MAX_COUNT
-      var input: String = Utils.VALUE_DEFAULT
-      var output: String = Utils.VALUE_MQTT
-      var master: String = Utils.VALUE_MASTER
-      while (i < args.length) {
-        if (Utils.PARAMETER_APP.equals(args(i))) {
-          i += 1
-          app = args(i).toInt
-        } else if (Utils.PARAMETER_OUTPUT.equals(args(i))) {
-          i += 1
-          output = args(i)
-        } else if (Utils.PARAMETER_INPUT.equals(args(i))) {
-          i += 1
-          input = args(i)
-        } else if (Utils.PARAMETER_COUNT.equals(args(i))) {
-          i += 1
-          maxCount = args(i).toInt
-        } else if (Utils.PARAMETER_MASTER.equals(args(i))) {
-          i += 1
-          master = args(i)
+    println(s"0 - out")
+    println(s"1 - WordCountStreamCombineByKey")
+    println(s"2 - TaxiRideCountCombineByKey")
+    println(s"3 - TaxiRideAvgCombineByKey")
+    println(s"4 - CustomMetricExample")
+    println(s"5 - TaxiRideKafkaProducer")
+    println(s"6 - LogParser")
+    println(s"7 - LogSQLParser")
+    println(s"8 - StructuredStreaming")
+    println(s"9 - Playground")
+    println(s"10 - DataFramesBasics")
+    println(s"11 - ")
+    println(s"12 - ")
+
+    var option01: String = ""
+    var option02: Int = Utils.VALUE_MAX_COUNT
+    var option03: String = Utils.VALUE_DEFAULT
+    var option04: String = Utils.VALUE_MQTT
+    if (args.length >= 0) {
+      println("choose an application: ")
+      val scanner = new Scanner(System.in)
+      option01 = scanner.nextLine()
+      if (args.length >= 1) {
+        option02 = Int.unbox(args(1))
+        if (args.length >= 2) {
+          option03 = args(2)
+          if (args.length >= 3) {
+            option04 = args(3)
+          }
         }
-        i += 1
       }
-      if (args.length >= 2) {
-        app match {
-          case 1 => WordCountStreamCombineByKey.run()
-          case 2 => TaxiRideCountCombineByKey.run(input, output)
-          case 3 => TaxiRideAvgCombineByKey.run(input, output)
-          case 4 => CustomMetricExample.run()
-          case 5 => new TaxiRideKafkaProducer(maxCount)
-          case 6 => LogParser.run(input, output)
-          case 7 => LogSQLParser.run(input, output)
-          case 8 => StructuredStreaming.run(input, output)
-          case _ => println("Invalid application.")
-        }
-      } else {
-        println("Please run the program and specify an application to launch at the Spark cluster.")
-        println("org.sense.spark.app.App -app 1: WordCountStreamCombineByKey")
-        println("-app 2: " + TaxiRideCountCombineByKey.getClass.getSimpleName)
-        println("-app 3: " + TaxiRideAvgCombineByKey.getClass.getSimpleName)
-        println("-app 4: " + CustomMetricExample.getClass.getSimpleName)
-        println("-app 5: TaxiRideKafkaProducer")
-        println("-app 6: " + LogParser.getClass.getSimpleName)
-        println("-app 7: " + LogSQLParser.getClass.getSimpleName)
-        println("-app 8: " + StructuredStreaming.getClass.getSimpleName)
-      }
+    }
+
+    println(s"option01 (app): $option01")
+    println(s"option02      : $option02")
+    println(s"option03      : $option03")
+    println(s"option04      : $option04")
+    option01 match {
+      case "0" => println(s"Bye, see you next time.")
+      case "1" => WordCountStreamCombineByKey.run()
+      case "2" => TaxiRideCountCombineByKey.run(option03, option04)
+      case "3" => TaxiRideAvgCombineByKey.run(option03, option04)
+      case "4" => CustomMetricExample.run()
+      case "5" => new TaxiRideKafkaProducer(option02)
+      case "6" => LogParser.run(option03, option04)
+      case "7" => LogSQLParser.run(option03, option04)
+      case "8" => StructuredStreaming.run(option03, option04)
+      case "9" => Playground.run()
+      case "10" => DataFramesBasics.run()
+      case "11" =>
+      case "12" =>
+      case "13" =>
+      case _ => println("option unavailable.")
     }
   }
 }
