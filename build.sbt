@@ -1,20 +1,22 @@
 name := "explore-spark"
-
-version := "0.3"
-
+version := "0.4"
 scalaVersion := "2.12.7"
 
 val sparkVersion = "3.0.0"
+val dropwizardVersion = "4.1.11"
+val twitterVersion = "0.13.7"
+val jodaVersion = "2.5"
+val fusesourceVersion = "1.16"
 
 // remove "provided" flag in order to test using the Intellij IDEA
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % sparkVersion, // % "provided",
   "org.apache.spark" %% "spark-sql" % sparkVersion, // % "provided",
   "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion, // % "provided",
-  "io.dropwizard.metrics" % "metrics-core" % "4.1.11", // % "provided",
+  "io.dropwizard.metrics" % "metrics-core" % dropwizardVersion, // % "provided",
   "com.twitter" %% "algebird-core" % "0.13.7",
-  "joda-time" % "joda-time" % "2.5",
-  "org.fusesource.mqtt-client" % "mqtt-client" % "1.16"
+  "joda-time" % "joda-time" % jodaVersion,
+  "org.fusesource.mqtt-client" % "mqtt-client" % fusesourceVersion,
 )
 
 assemblyExcludedJars in assembly := {
