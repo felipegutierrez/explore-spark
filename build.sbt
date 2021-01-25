@@ -29,8 +29,8 @@ assemblyExcludedJars in assembly := {
   }
 }
 
-mainClass in(Compile, packageBin) := Some("org.sense.spark.app.App")
-mainClass in assembly := Some("org.sense.spark.app.App")
+mainClass in(Compile, packageBin) := Some("org.github.explore.App")
+mainClass in assembly := Some("org.github.explore.App")
 
 assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
 assemblyJarName in assembly := s"${name.value}_${scalaBinaryVersion.value}-fat_${version.value}.jar"
