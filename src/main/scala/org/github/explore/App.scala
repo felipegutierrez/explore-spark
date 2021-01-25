@@ -6,7 +6,7 @@ import org.github.explore.spark.app.pattern.LogParser
 import org.github.explore.spark.app.sql.LogSQLParser
 import org.github.explore.spark.app.structure.StructuredStreaming
 import org.github.explore.spark.app.tests.CustomMetricExample
-import org.github.explore.spark.dataframes.DataFramesBasics
+import org.github.explore.spark.dataframes.{DataFramesBasics, DataSources}
 import org.github.explore.spark.kafka.TaxiRideKafkaProducer
 import org.github.explore.spark.util.Utils
 
@@ -27,8 +27,15 @@ object App {
     println(s"8 - StructuredStreaming")
     println(s"9 - Playground")
     println(s"10 - DataFramesBasics")
-    println(s"11 - ")
+    println(s"11 - DataSources")
     println(s"12 - ")
+    println(s"13 - ")
+    println(s"14 - ")
+    println(s"15 - ")
+    println(s"16 - ")
+    println(s"17 - ")
+    println(s"18 - ")
+    println(s"19 - ")
 
     var option01: String = ""
     var option02: Int = Utils.VALUE_MAX_COUNT
@@ -65,9 +72,15 @@ object App {
       case "8" => StructuredStreaming.run(option03, option04)
       case "9" => Playground.run()
       case "10" => DataFramesBasics.run()
-      case "11" =>
+      case "11" => DataSources.run()
       case "12" =>
       case "13" =>
+      case "14" =>
+      case "15" =>
+      case "16" =>
+      case "17" =>
+      case "18" =>
+      case "19" =>
       case _ => println("option unavailable.")
     }
   }
