@@ -41,18 +41,8 @@ object DataSources {
       .option("path", "src/main/resources/data/cars.json")
       .load()
     // showing a data frame and schema
-    carsDF.show()
-    carsDF.printSchema()
-
-    // alternative reading with options map
-    val carsDFWithOptionMap = sparkSession.read
-      .format("json")
-      .options(Map(
-        "mode" -> "failFast",
-        "path" -> "src/main/resources/data/cars.json",
-        "inferSchema" -> "true"
-      ))
-      .load()
+    // carsDF.show()
+    // carsDF.printSchema()
 
     /*
    Writing DFs
@@ -66,5 +56,16 @@ object DataSources {
       .format("json")
       .mode(SaveMode.Overwrite)
       .save("target/output/data/cars_dupe.json")
+
+    // alternative reading with options map
+    val carsDFWithOptionMap = sparkSession.read
+      .format("json")
+      .options(Map(
+        "mode" -> "failFast",
+        "path" -> "target/output/data/cars_dupe.json",
+        "inferSchema" -> "true"
+      ))
+      .load()
+   
   }
 }
