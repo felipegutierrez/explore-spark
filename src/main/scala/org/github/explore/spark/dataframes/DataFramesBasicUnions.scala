@@ -40,9 +40,9 @@ object DataFramesBasicUnions {
     Row("amc rebel sst", Map("gallon" -> 16.0), 8L, 304.0, 150L, 3433L, 12.0, "1970-01-01", "USA")
   ).asJava
 
-  def main(args: Array[String]): Unit = {
-    run()
-  }
+//  def main(args: Array[String]): Unit = {
+//    run()
+//  }
 
   def run() = {
     val firstDF = createDataFrame(carsOne)
