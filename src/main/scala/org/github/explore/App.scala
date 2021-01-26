@@ -6,7 +6,7 @@ import org.github.explore.spark.app.pattern.LogParser
 import org.github.explore.spark.app.sql.LogSQLParser
 import org.github.explore.spark.app.structure.StructuredStreaming
 import org.github.explore.spark.app.tests.CustomMetricExample
-import org.github.explore.spark.dataframes.{DataFramesBasics, DataSources}
+import org.github.explore.spark.dataframes.{DataFramesBasicUnions, DataFramesBasics, DataSources}
 import org.github.explore.spark.kafka.TaxiRideKafkaProducer
 import org.github.explore.spark.util.Utils
 
@@ -27,8 +27,8 @@ object App {
     println(s"8 - StructuredStreaming")
     println(s"9 - Playground")
     println(s"10 - DataFramesBasics")
-    println(s"11 - DataSources")
-    println(s"12 - ")
+    println(s"11 - DataFramesComparisonBasics")
+    println(s"12 - DataSources")
     println(s"13 - ")
     println(s"14 - ")
     println(s"15 - ")
@@ -72,8 +72,8 @@ object App {
       case "8" => StructuredStreaming.run(option03, option04)
       case "9" => Playground.run()
       case "10" => DataFramesBasics.run()
-      case "11" => DataSources.run()
-      case "12" =>
+      case "11" => DataFramesBasicUnions.run()
+      case "12" => DataSources.run()
       case "13" =>
       case "14" =>
       case "15" =>
