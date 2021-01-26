@@ -23,9 +23,16 @@ object DataSources {
     StructField("Origin", StringType)
   ))
 
-//  def main(args: Array[String]): Unit = {
-//    run()
-//  }
+  // CSV flags
+  val stocksSchema = StructType(Array(
+    StructField("symbol", StringType),
+    StructField("date", DateType),
+    StructField("price", DoubleType)
+  ))
+
+  //  def main(args: Array[String]): Unit = {
+  //    run()
+  //  }
 
   def run() = {
     val dfFromJson = readDataFrameFromJson("src/main/resources/data/cars.json")
@@ -49,6 +56,16 @@ object DataSources {
       ))
       .load()
 
+    val opts = Map(
+      ("dateFormat" -> "MMM dd YYYY"),
+      ("header" -> "true"),
+      ("sep" -> ","),
+      ("nullValue" -> "")
+    )
+    val csvDF = readCsvFileWithOptions("src/main/resources/data/stocks.csv", opts)
+    csvDF.show()
+
+    saveParquetDataFrame(dfFromJson, "target/output/data/parquet/cars.parquet")
   }
 
   def readDataFrameFromJson(jsonFile: String) = {
@@ -85,5 +102,21 @@ object DataSources {
       .format("json")
       .mode(SaveMode.Overwrite)
       .save(targetJsonFile)
+  }
+
+  def readCsvFileWithOptions(csvPath: String = "src/main/resources/data/stocks.csv", opts: Map[String, String]): sql.DataFrame = {
+    // CSV
+    val csvDF = sparkSession.read
+      .schema(stocksSchema)
+      .options(opts)
+      .csv(csvPath)
+    csvDF
+  }
+
+  def saveParquetDataFrame(dataFrame: sql.DataFrame, path: String) = {
+    // Parquet
+    dataFrame.write
+      .mode(SaveMode.Overwrite)
+      .save(path)
   }
 }
