@@ -18,6 +18,12 @@ resolvers ++= Seq(
   "MavenRepository" at "https://mvnrepository.com"
 )
 
+// ########## Spark unit tests configurations ##########
+fork in Test := true
+javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled") // increase memory for
+parallelExecution in Test := false // disable parallelism to
+// ########## Spark unit tests configurations ##########
+
 // remove "provided" flag in order to test using the Intellij IDEA
 libraryDependencies ++= Seq(
   // Spark
