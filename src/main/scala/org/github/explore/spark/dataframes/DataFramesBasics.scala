@@ -5,17 +5,20 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
 
 object DataFramesBasics {
-    def main(args: Array[String]): Unit = {
-      run()
-    }
+  // creating a Spark Session
+  val sparkSession = SparkSession.builder()
+    .appName("DataFramesBasics")
+    .config("spark.master", "local")
+    .getOrCreate()
+  val spark2 = sparkSession
+
+  import spark2.implicits._
+
+  //    def main(args: Array[String]): Unit = {
+  //      run()
+  //    }
 
   def run() = {
-
-    // creating a Spark Session
-    val sparkSession = SparkSession.builder()
-      .appName("DataFramesBasics")
-      .config("spark.master", "local")
-      .getOrCreate()
 
     // reading a Data Frame
     val firstDF: sql.DataFrame = sparkSession.read
@@ -63,10 +66,9 @@ object DataFramesBasics {
     )
     val manualCarsDF = sparkSession.createDataFrame(cars) // schema auto-inferred
 
-    // create DFs with implicipts
-    // import spark.implicits._
-    // val manualCarsDFWithImplicits = cars.toDF("Name", "MPG", "Cylinders", "Displacement", "HP", "Weight", "Acceleration", "Year", "CountryOrigin")
-    // manualCarsDFWithImplicits.printSchema()
+    // create DFs with implicits
+    val manualCarsDFWithImplicits = cars.toDF("Name", "MPG", "Cylinders", "Displacement", "HP", "Weight", "Acceleration", "Year", "CountryOrigin")
+    manualCarsDFWithImplicits.printSchema()
 
     /**
      * Exercise:
@@ -120,20 +122,5 @@ object DataFramesBasics {
     println(s"counting movies: ${moviesDFWithSchema.count()}")
     moviesDFWithSchema.printSchema()
     moviesDFWithSchema.take(10).foreach(println)
-
-    // difference between 2 DFs
-    val carsTwo = Seq(
-      ("chevrolet chevelle malibu", 18.0, 8L, 307.0, 130L, 3504L, 12.0, "1970-01-01", "USA"),
-      ("buick skylark 320", 15.0, 8L, 350.0, 165L, 3693L, 11.5, "1970-01-01", "USA"),
-      ("plymouth satellite", 18.0, 8L, 318.0, 150L, 3436L, 11.0, "1970-01-01", "USA"),
-      ("amc rebel sst", 16.0, 8L, 304.0, 150L, 3433L, 12.0, "1970-01-01", "USA")
-    )
-    val manualCarsTwoDF = sparkSession.createDataFrame(carsTwo)
-    println(s"resultDF union -> distinct:")
-    manualCarsDF.union(manualCarsTwoDF).distinct().show()
-    println(s"resultDF intersect: ")
-    manualCarsDF.intersect(manualCarsTwoDF).show()
-    println(s"resultDF except: ")
-    manualCarsTwoDF.except(manualCarsDF).show()
   }
 }
