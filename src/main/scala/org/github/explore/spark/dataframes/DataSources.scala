@@ -5,9 +5,9 @@ import org.apache.spark.sql.types._
 import org.apache.spark.sql.{SaveMode, SparkSession}
 
 object DataSources {
-  def main(args: Array[String]): Unit = {
-    run()
-  }
+//  def main(args: Array[String]): Unit = {
+//    run()
+//  }
 
   def run() = {
     val sparkSession = SparkSession.builder()
@@ -66,6 +66,6 @@ object DataSources {
         "inferSchema" -> "true"
       ))
       .load()
-   
+
   }
 }
