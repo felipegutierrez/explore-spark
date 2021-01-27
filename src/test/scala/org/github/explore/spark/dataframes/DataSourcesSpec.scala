@@ -9,11 +9,11 @@ class DataSourcesSpec extends AnyFunSuite with SharedSparkContext {
 
   test("read and save a data frame as another JSON files must be equal files") {
 
-    val dfFromJson1 = DataSources.readDataFrameFromJson("src/main/resources/data/cars.json")
+    val dfFromJson1 = DataSources.readDataFrameFromJson("src/main/resources/data/cars.json", DataSources.carsSchema)
     val df01Count = dfFromJson1.count()
 
     DataSources.writeDataFrameFromJson(dfFromJson1, "target/output/data/cars_dupe.json")
-    val dfFromJson2 = DataSources.readDataFrameFromJson("target/output/data/cars_dupe.json")
+    val dfFromJson2 = DataSources.readDataFrameFromJson("target/output/data/cars_dupe.json", DataSources.carsSchema)
 
     val count = dfFromJson1.toJavaRDD.union(dfFromJson2.toJavaRDD).count()
 
@@ -21,11 +21,11 @@ class DataSourcesSpec extends AnyFunSuite with SharedSparkContext {
   }
   test("read and save a data frame as another JSON files must be equal files when using distinct to count") {
 
-    val dfFromJson1 = DataSources.readDataFrameFromJson("src/main/resources/data/cars.json")
+    val dfFromJson1 = DataSources.readDataFrameFromJson("src/main/resources/data/cars.json", DataSources.carsSchema)
     val df01Count = dfFromJson1.count()
 
     DataSources.writeDataFrameFromJson(dfFromJson1, "target/output/data/cars_dupe.json")
-    val dfFromJson2 = DataSources.readDataFrameFromJson("target/output/data/cars_dupe.json")
+    val dfFromJson2 = DataSources.readDataFrameFromJson("target/output/data/cars_dupe.json", DataSources.carsSchema)
 
     val countDistinct = dfFromJson1.toJavaRDD.union(dfFromJson2.toJavaRDD).distinct().count()
 
@@ -44,13 +44,16 @@ class DataSourcesSpec extends AnyFunSuite with SharedSparkContext {
   test("size of Parquet binary files for Data Frames must be 6x smaller than Json") {
     val json: String = "src/main/resources/data/cars.json"
     val parquet: String = "target/output/data/parquet/cars.parquet"
-    val dfFromJson1 = DataSources.readDataFrameFromJson(json)
+    val dfFromJson1 = DataSources.readDataFrameFromJson(json, DataSources.carsSchema)
     DataSources.saveParquetDataFrame(dfFromJson1, parquet)
-    
+
     val jsonSize = (new File(json)).length
     val parquetSize = (new File(parquet)).length
     val timesBigger: Double = jsonSize / parquetSize
     println(s"jsonSize: $jsonSize parquetSize: $parquetSize timesBigger: $timesBigger")
     assert(timesBigger > 6)
+  }
+  test("insert data into PostgreSql") {
+
   }
 }
