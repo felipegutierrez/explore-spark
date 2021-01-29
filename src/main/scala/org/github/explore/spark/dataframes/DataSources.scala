@@ -36,9 +36,9 @@ object DataSources {
   val user = "docker"
   val password = "docker"
 
-  def main(args: Array[String]): Unit = {
-    run()
-  }
+//  def main(args: Array[String]): Unit = {
+//    run()
+//  }
 
   def run() = {
     val dfFromJson = readDataFrameFromJson("src/main/resources/data/cars.json", carsSchema)

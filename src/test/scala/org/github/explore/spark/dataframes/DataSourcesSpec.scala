@@ -53,7 +53,4 @@ class DataSourcesSpec extends AnyFunSuite with SharedSparkContext {
     println(s"jsonSize: $jsonSize parquetSize: $parquetSize timesBigger: $timesBigger")
     assert(timesBigger > 6)
   }
-  test("insert data into PostgreSql") {
-
-  }
 }
