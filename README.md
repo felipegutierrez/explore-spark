@@ -1,4 +1,5 @@
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/de3f2d287d134ab5957a213a67898108)](https://app.codacy.com/gh/felipegutierrez/explore-spark?utm_source=github.com&utm_medium=referral&utm_content=felipegutierrez/explore-spark&utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.com/felipegutierrez/explore-spark.svg?branch=master)](https://travis-ci.com/felipegutierrez/explore-spark)
 [![Coverage Status](https://coveralls.io/repos/github/felipegutierrez/explore-spark/badge.svg?branch=master)](https://coveralls.io/github/felipegutierrez/explore-spark?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/felipegutierrez/explore-spark/badge)](https://www.codefactor.io/repository/github/felipegutierrez/explore-spark)
