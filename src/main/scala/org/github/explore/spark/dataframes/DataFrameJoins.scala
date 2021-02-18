@@ -2,7 +2,7 @@ package org.github.explore.spark.dataframes
 
 import org.apache.spark.sql
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.{expr, max, col}
+import org.apache.spark.sql.functions.{col, expr, max}
 
 object DataFrameJoins {
 
@@ -16,20 +16,6 @@ object DataFrameJoins {
   val url = "jdbc:postgresql://localhost:5432/rtjvm"
   val user = "docker"
   val password = "docker"
-
-  val guitarsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/guitars.json")
-  val guitaristsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/guitarPlayers.json")
-  val bandsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/bands.json")
-
-  def getDataFrameFromJson(pathJson: String): sql.DataFrame = {
-    spark.read
-      .option("inferSchema", "true")
-      .json(pathJson)
-  }
-
-  def main(args: Array[String]): Unit = {
-    run()
-  }
 
   def run() = {
     //    val guitaristsBandDF = runJoin(MyJoinType.INNER_JOIN)
@@ -52,6 +38,10 @@ object DataFrameJoins {
     // allNotManagerEmployees()
     bestPaiedEmployees()
   }
+
+  //  def main(args: Array[String]): Unit = {
+  //    run()
+  //  }
 
   /**
    * 3. find the job titles of the best paid 10 employees in the company
@@ -89,6 +79,18 @@ object DataFrameJoins {
     result.show()
   }
 
+  def readFromPostgreSql(postgreSqlTable: String = "employees"): sql.DataFrame = {
+    val dataframe = spark.read
+      .format("jdbc")
+      .option("driver", driver)
+      .option("url", url)
+      .option("user", user)
+      .option("password", password)
+      .option("dbtable", s"public.$postgreSqlTable")
+      .load()
+    dataframe
+  }
+
   def allEmployeesAndMaxSalaries() = {
     val employeesAndSalaries = allEmployeesAndSalaries(MyJoinType.INNER_JOIN)
     employeesAndSalaries.printSchema()
@@ -112,24 +114,15 @@ object DataFrameJoins {
       .drop(salariesDF.col("emp_no"))
   }
 
-  def readFromPostgreSql(postgreSqlTable: String = "employees"): sql.DataFrame = {
-    val dataframe = spark.read
-      .format("jdbc")
-      .option("driver", driver)
-      .option("url", url)
-      .option("user", user)
-      .option("password", password)
-      .option("dbtable", s"public.$postgreSqlTable")
-      .load()
-    dataframe
-  }
-
   def selectWithoutRenaming(): sql.DataFrame = {
     val guitaristsBandDF = runJoin(MyJoinType.INNER_JOIN)
     guitaristsBandDF.select("id", "band")
   }
 
   def runJoin(joinType: String): sql.DataFrame = {
+    val guitaristsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/guitarPlayers.json")
+    val bandsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/bands.json")
+
     val joinCondition = guitaristsDF.col("band") === bandsDF.col("id")
     guitaristsDF.join(bandsDF, joinCondition, joinType)
   }
@@ -149,18 +142,35 @@ object DataFrameJoins {
   }
 
   def selectWithDropingDuplicatedColumns(): sql.DataFrame = {
-    val guitaristsBandDF = runJoinWithRenaming(MyJoinType.INNER_JOIN)
+    // val guitaristsBandDF = runJoinWithRenaming(MyJoinType.INNER_JOIN)
+    val guitaristsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/guitarPlayers.json")
+    val bandsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/bands.json")
+
+    val joinCondition = guitaristsDF.col("band") === bandsDF.col("id")
+    val guitaristsBandDF = guitaristsDF.join(bandsDF.withColumnRenamed("name", "band_name"), joinCondition, MyJoinType.INNER_JOIN)
+
     guitaristsBandDF
       .drop(bandsDF.col("id"))
       .select("band", "guitars", "id", "name", "hometown", "band_name", "year")
   }
 
   def runJoinWithRenaming(joinType: String): sql.DataFrame = {
+    val guitaristsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/guitarPlayers.json")
+    val bandsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/bands.json")
+
     val joinCondition = guitaristsDF.col("band") === bandsDF.col("id")
     guitaristsDF.join(bandsDF.withColumnRenamed("name", "band_name"), joinCondition, joinType)
   }
 
+  def getDataFrameFromJson(pathJson: String): sql.DataFrame = {
+    spark.read
+      .option("inferSchema", "true")
+      .json(pathJson)
+  }
+
   def runJoinWithComplexExpression(joinType: String): sql.DataFrame = {
+    val guitaristsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/guitarPlayers.json")
+    val guitarsDF: sql.DataFrame = getDataFrameFromJson("src/main/resources/data/guitars.json")
     guitaristsDF.join(guitarsDF.withColumnRenamed("id", "guitarId"),
       expr("array_contains(guitars, guitarId)"),
       joinType)

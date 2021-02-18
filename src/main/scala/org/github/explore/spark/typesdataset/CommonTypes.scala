@@ -3,17 +3,16 @@ package org.github.explore.spark.typesdataset
 import org.apache.spark.sql
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
-import org.github.explore.spark.dataframes.DataFrameJoins
 
 object CommonTypes {
   val spark = SparkSession.builder()
-    .appName(DataFrameJoins.getClass.getSimpleName)
+    .appName(CommonTypes.getClass.getSimpleName)
     .config("spark.master", "local")
     .getOrCreate()
 
-  def main(args: Array[String]): Unit = {
-    run()
-  }
+  //  def main(args: Array[String]): Unit = {
+  //    run()
+  //  }
 
   def run() = {
     addPlainValueColumn("plain_value").show()
@@ -30,15 +29,6 @@ object CommonTypes {
   def onlyGoodMovies(): sql.DataFrame = {
     // it is the same of good_movie === true
     evaluateBooleansAsColumns().where("good_movie")
-  }
-
-  def evaluateBooleansAsColumns(): sql.DataFrame = {
-    val dramaFilter = col("Major_Genre") equalTo "Drama"
-    val goodRatingFilter = col("IMDB_Rating") > 7.0
-    val preferredFilter = dramaFilter and goodRatingFilter
-    val moviesDF = getDataFrameFromJson("src/main/resources/data/movies.json")
-      .select(col("Title"), preferredFilter.as("good_movie"))
-    moviesDF
   }
 
   def getCorrelationOf(column1: String, column2: String): Double = {
@@ -58,6 +48,15 @@ object CommonTypes {
   def onlyBadMovies(): sql.DataFrame = {
     // it is the same of good_movie =!= true or using not as negation
     evaluateBooleansAsColumns().where(not(col("good_movie")))
+  }
+
+  def evaluateBooleansAsColumns(): sql.DataFrame = {
+    val dramaFilter = col("Major_Genre") equalTo "Drama"
+    val goodRatingFilter = col("IMDB_Rating") > 7.0
+    val preferredFilter = dramaFilter and goodRatingFilter
+    val moviesDF = getDataFrameFromJson("src/main/resources/data/movies.json")
+      .select(col("Title"), preferredFilter.as("good_movie"))
+    moviesDF
   }
 
   def getCorrelationOf(): sql.DataFrame = {
