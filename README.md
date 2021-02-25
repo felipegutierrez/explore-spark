@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.com/felipegutierrez/explore-spark.svg?branch=master)](https://travis-ci.com/felipegutierrez/explore-spark)
 [![Coverage Status](https://coveralls.io/repos/github/felipegutierrez/explore-spark/badge.svg?branch=master)](https://coveralls.io/github/felipegutierrez/explore-spark?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/felipegutierrez/explore-spark/badge)](https://www.codefactor.io/repository/github/felipegutierrez/explore-spark)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/afbad8f76dd04645ab029b1e32e417af)](https://www.codacy.com/gh/felipegutierrez/explore-spark/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=felipegutierrez/explore-spark&amp;utm_campaign=Badge_Coverage)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/de3f2d287d134ab5957a213a67898108)](https://app.codacy.com/gh/felipegutierrez/explore-spark?utm_source=github.com&utm_medium=referral&utm_content=felipegutierrez/explore-spark&utm_campaign=Badge_Grade)
 ![GitHub issues](https://img.shields.io/github/issues-raw/felipegutierrez/explore-spark)
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/felipegutierrez/explore-spark)
