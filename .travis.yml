@@ -12,3 +12,4 @@ script:
   - sbt coverage test
 after_success:
   - sbt coverageReport coveralls
+  - bash <(curl -Ls https://coverage.codacy.com/get.sh) report
