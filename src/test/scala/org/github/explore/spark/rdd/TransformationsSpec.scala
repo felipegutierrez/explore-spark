@@ -37,4 +37,21 @@ class TransformationsSpec extends AnyFunSuite with SharedSparkContext {
   test("repartition the RDD") {
     val result = Transformations.getRepartition()
   }
+
+  test("read movies and show distinct genre") {
+    val result = Transformations.distinctGenre()
+    result.foreach(println(_))
+  }
+
+  test("Select all the movies in the Drama genre with IMDB rating > 6.") {
+    val result = Transformations.getAllMoviesWithRatingGreaterThan(6)
+    result.foreach(println(_))
+    val count = result.count
+    assertResult(591)(count)
+  }
+
+  test("Show the average rating of movies by genre.") {
+    val result = Transformations.getAvgByGenre()
+    result.foreach(println(_))
+  }
 }
