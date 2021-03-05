@@ -1,5 +1,5 @@
 name := "explore-spark"
-version := "0.4"
+version := "0.5"
 scalaVersion := "2.12.7"
 
 val scalaTestVersion = "3.2.2"
@@ -7,10 +7,14 @@ val sparkVersion = "3.0.1"
 val log4jVersion = "2.4.1"
 val dropwizardVersion = "4.1.11"
 val twitterVersion = "0.13.7"
+val twitter4jVersion = "4.0.7"
 val jodaVersion = "2.5"
 val fusesourceVersion = "1.16"
 val vegasVersion = "0.3.11"
 val postgresVersion = "42.2.2"
+val cassandraConnectorVersion = "3.0.0" // preview version at the moment of writing (July 7, 2020)
+val kafkaVersion = "2.4.0"
+val nlpLibVersion = "3.5.1"
 
 resolvers ++= Seq(
   "bintray-spark-packages" at "https://dl.bintray.com/spark-packages/maven",
@@ -31,13 +35,23 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % sparkVersion, // % "provided",
   "org.apache.spark" %% "spark-sql" % sparkVersion, // % "provided",
 
+  // streaming-kafka
+  "org.apache.spark" % "spark-sql-kafka-0-10_2.12" % sparkVersion,
+  // low-level integrations
+  "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion,
+  "org.apache.spark" %% "spark-streaming-kinesis-asl" % sparkVersion,
+
+  // kafka
+  "org.apache.kafka" %% "kafka" % kafkaVersion,
+  "org.apache.kafka" % "kafka-streams" % kafkaVersion,
+
+  // cassandra
+  "com.datastax.spark" %% "spark-cassandra-connector" % cassandraConnectorVersion,
+
   // Scala test, Spark unit tests
   "com.holdenkarau" %% "spark-testing-base" % "3.0.1_1.0.0" % Test,
   "org.scalatest" %% "scalatest" % scalaTestVersion,
   "junit" % "junit" % "4.13" % Test,
-
-  // Spark - Kafka
-  "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion, // % "provided",
 
   // logging
   "org.apache.logging.log4j" % "log4j-api" % log4jVersion,

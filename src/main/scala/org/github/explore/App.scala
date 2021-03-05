@@ -1,13 +1,13 @@
 package org.github.explore
 
-import org.github.explore.spark.app.Playground
-import org.github.explore.spark.app.combiners.{TaxiRideAvgCombineByKey, TaxiRideCountCombineByKey, WordCountStreamCombineByKey}
-import org.github.explore.spark.app.pattern.LogParser
-import org.github.explore.spark.app.sql.LogSQLParser
-import org.github.explore.spark.app.structure.StructuredStreaming
-import org.github.explore.spark.app.tests.CustomMetricExample
+import org.github.explore.spark.Playground
 import org.github.explore.spark.dataframes.{DataFramesBasicUnions, DataFramesBasics, DataSources}
 import org.github.explore.spark.kafka.TaxiRideKafkaProducer
+import org.github.explore.spark.metrics.CustomMetricExample
+import org.github.explore.spark.sql.LogSQLParser
+import org.github.explore.spark.streaming.combiners.{TaxiRideAvgCombineByKey, TaxiRideCountCombineByKey, WordCountStreamCombineByKey}
+import org.github.explore.spark.streaming.regex.LogParser
+import org.github.explore.spark.streaming.structure.StructuredStreaming
 import org.github.explore.spark.util.Utils
 
 import java.util.Scanner
