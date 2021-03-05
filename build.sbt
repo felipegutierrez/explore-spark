@@ -6,8 +6,7 @@ val scalaTestVersion = "3.2.2"
 val sparkVersion = "3.0.1"
 val log4jVersion = "2.4.1"
 val dropwizardVersion = "4.1.11"
-val twitterVersion = "0.13.7"
-val twitter4jVersion = "4.0.7"
+val twitterAlgebirdVersion = "0.13.7"
 val jodaVersion = "2.5"
 val fusesourceVersion = "1.16"
 val vegasVersion = "0.3.11"
@@ -48,8 +47,7 @@ libraryDependencies ++= Seq(
   // cassandra
   "com.datastax.spark" %% "spark-cassandra-connector" % cassandraConnectorVersion,
 
-  // Scala test, Spark unit tests
-  "com.holdenkarau" %% "spark-testing-base" % "3.0.1_1.0.0" % Test,
+  // Scala test
   "org.scalatest" %% "scalatest" % scalaTestVersion,
   "junit" % "junit" % "4.13" % Test,
 
@@ -64,7 +62,7 @@ libraryDependencies ++= Seq(
   "io.dropwizard.metrics" % "metrics-core" % dropwizardVersion, // % "provided",
 
   // twitter
-  "com.twitter" %% "algebird-core" % "0.13.7",
+  "com.twitter" %% "algebird-core" % twitterAlgebirdVersion,
 
   // joda
   "joda-time" % "joda-time" % jodaVersion,

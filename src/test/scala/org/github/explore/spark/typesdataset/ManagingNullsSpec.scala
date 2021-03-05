@@ -1,10 +1,10 @@
 package org.github.explore.spark.typesdataset
 
-import com.holdenkarau.spark.testing.SharedSparkContext
 import org.apache.spark.sql.functions.col
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
-class ManagingNullsSpec extends AnyFunSuite with SharedSparkContext {
+class ManagingNullsSpec extends AnyFunSuite with SharedSparkSession {
   test("using coalesce must return one or another column") {
     val dataFrameWithCoalesce = ManagingNulls.getOneOrAnotherColumnIfNull()
     dataFrameWithCoalesce.show

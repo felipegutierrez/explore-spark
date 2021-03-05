@@ -1,10 +1,9 @@
 package org.github.explore.spark.typesdataset
 
-import com.holdenkarau.spark.testing.SharedSparkContext
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
-
-class DatasetsSpec extends AnyFunSuite with SharedSparkContext {
+class DatasetsSpec extends AnyFunSuite with SharedSparkSession {
   test("convert a data frame to a data set should allow use of scala monads") {
     val dataSetOfNumbers = Datasets.convertDataFrameToDataSet()
     dataSetOfNumbers.show

@@ -1,11 +1,11 @@
 package org.github.explore.spark.dataframes
 
-import com.holdenkarau.spark.testing.SharedSparkContext
 import org.apache.spark.sql
 import org.apache.spark.sql.functions.col
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
-class ColumnsAndExpressionsSpec extends AnyFunSuite with SharedSparkContext {
+class ColumnsAndExpressionsSpec extends AnyFunSuite with SharedSparkSession {
 
   import ColumnsAndExpressions._
 

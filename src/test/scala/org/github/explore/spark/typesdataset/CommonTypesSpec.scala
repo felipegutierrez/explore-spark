@@ -1,10 +1,10 @@
 package org.github.explore.spark.typesdataset
 
-import com.holdenkarau.spark.testing.SharedSparkContext
 import org.apache.spark.sql.functions.col
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
-class CommonTypesSpec extends AnyFunSuite with SharedSparkContext {
+class CommonTypesSpec extends AnyFunSuite with SharedSparkSession {
 
   test("we should be able to add a column on a data frame") {
     val moviesDFWithNewColumn = CommonTypes.addPlainValueColumn("plain_value")

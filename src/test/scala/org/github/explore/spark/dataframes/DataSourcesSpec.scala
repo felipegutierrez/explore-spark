@@ -1,11 +1,14 @@
 package org.github.explore.spark.dataframes
 
-import com.holdenkarau.spark.testing.SharedSparkContext
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
 import java.io.File
 
-class DataSourcesSpec extends AnyFunSuite with SharedSparkContext {
+class DataSourcesSpec extends AnyFunSuite with SharedSparkSession {
+
+  // We can import sql implicits
+  // import sqlImplicits._
 
   test("read and save a data frame as another JSON files must be equal files") {
 

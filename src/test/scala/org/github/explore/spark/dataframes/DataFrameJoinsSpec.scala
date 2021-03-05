@@ -1,10 +1,10 @@
 package org.github.explore.spark.dataframes
 
-import com.holdenkarau.spark.testing.SharedSparkContext
 import org.apache.spark.sql.AnalysisException
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
-class DataFrameJoinsSpec extends AnyFunSuite with SharedSparkContext {
+class DataFrameJoinsSpec extends AnyFunSuite with SharedSparkSession {
 
   test("an inner join guitar players with bands should result in a 3 rows data frame") {
     val guitaristsBandDF = DataFrameJoins.runJoin(DataFrameJoins.MyJoinType.INNER_JOIN)

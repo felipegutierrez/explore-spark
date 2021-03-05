@@ -1,13 +1,13 @@
 package org.github.explore.spark.typesdataset
 
-import com.holdenkarau.spark.testing.SharedSparkContext
 import org.apache.spark.sql.functions.col
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class ComplexTypesSpec extends AnyFunSuite with SharedSparkContext {
+class ComplexTypesSpec extends AnyFunSuite with SharedSparkSession {
 
   test("parse year with to digits to the previous century if year is after 1923") {
     val date: Date = ComplexTypes.parseDate("21-Jan-24", "d-MMM-yy")

@@ -1,11 +1,11 @@
 package org.github.explore.spark.rdd
 
-import com.holdenkarau.spark.testing.SharedSparkContext
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.util.{Failure, Success}
 
-class BasicsRDDSpec extends AnyFunSuite with SharedSparkContext {
+class BasicsRDDSpec extends AnyFunSuite with SharedSparkSession {
   test("calculate an arithmetic progression using RDDs") {
     val begin: Double = 1
     val end: Double = 1000000

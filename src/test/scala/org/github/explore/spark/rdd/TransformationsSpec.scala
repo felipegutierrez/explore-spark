@@ -1,11 +1,11 @@
 package org.github.explore.spark.rdd
 
-import com.holdenkarau.spark.testing.SharedSparkContext
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.util.{Failure, Success}
 
-class TransformationsSpec extends AnyFunSuite with SharedSparkContext {
+class TransformationsSpec extends AnyFunSuite with SharedSparkSession {
 
   test("process a filtering transformation in a file that exists") {
     val result = Transformations.filtering("src/main/resources/data/stocks.csv", "MSFT")

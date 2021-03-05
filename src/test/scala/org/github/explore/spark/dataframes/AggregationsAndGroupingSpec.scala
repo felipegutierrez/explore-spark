@@ -1,10 +1,10 @@
 package org.github.explore.spark.dataframes
 
-import com.holdenkarau.spark.testing.SharedSparkContext
 import org.apache.spark.sql.functions.col
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
-class AggregationsAndGroupingSpec extends AnyFunSuite with SharedSparkContext {
+class AggregationsAndGroupingSpec extends AnyFunSuite with SharedSparkSession {
 
   /**
    * Exercises

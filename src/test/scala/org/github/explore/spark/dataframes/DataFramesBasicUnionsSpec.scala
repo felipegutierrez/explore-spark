@@ -1,12 +1,12 @@
 package org.github.explore.spark.dataframes
 
-import com.holdenkarau.spark.testing.SharedSparkContext
 import org.apache.spark.sql.Row
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.collection.JavaConverters._
 
-class DataFramesBasicUnionsSpec extends AnyFunSuite with SharedSparkContext {
+class DataFramesBasicUnionsSpec extends AnyFunSuite with SharedSparkSession {
   val list01 = List(
     Row("chevrolet chevelle malibu", Map("gallon" -> 18.0), 8L, 307.0, 130L, 3504L, 12.0, "1970-01-01", "USA"),
     Row("buick skylark 320", Map("gallon" -> 15.0, "liters" -> 13.0), 8L, 350.0, 165L, 3693L, 11.5, "1970-01-01", "USA"),

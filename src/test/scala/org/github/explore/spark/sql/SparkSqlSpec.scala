@@ -1,9 +1,9 @@
 package org.github.explore.spark.sql
 
-import com.holdenkarau.spark.testing.SharedSparkContext
+import org.github.explore.spark.SharedSparkSession
 import org.scalatest.funsuite.AnyFunSuite
 
-class SparkSqlSpec extends AnyFunSuite with SharedSparkContext {
+class SparkSqlSpec extends AnyFunSuite with SharedSparkSession {
 
   test("we should get the correct amount of cars in USA using Spark SQL") {
     val carsFromUSA = SparkSql.selectCarsFromUSA()
