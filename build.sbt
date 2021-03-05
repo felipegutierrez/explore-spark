@@ -14,6 +14,7 @@ val postgresVersion = "42.2.2"
 val cassandraConnectorVersion = "3.0.0" // preview version at the moment of writing (July 7, 2020)
 val kafkaVersion = "2.4.0"
 val nlpLibVersion = "3.5.1"
+val scalacScoverageVersion = "1.4.2"
 
 resolvers ++= Seq(
   "bintray-spark-packages" at "https://dl.bintray.com/spark-packages/maven",
@@ -69,6 +70,8 @@ libraryDependencies ++= Seq(
 
   // MQTT broker
   "org.fusesource.mqtt-client" % "mqtt-client" % fusesourceVersion,
+
+  "org.scoverage" %% "scalac-scoverage-runtime" % scalacScoverageVersion,
 )
 
 assemblyExcludedJars in assembly := {
