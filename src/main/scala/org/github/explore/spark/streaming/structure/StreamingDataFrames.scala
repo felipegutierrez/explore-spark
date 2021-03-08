@@ -1,9 +1,11 @@
 package org.github.explore.spark.streaming.structure
 
 import org.apache.spark.sql.functions.col
-import org.apache.spark.sql.streaming.StreamingQuery
+import org.apache.spark.sql.streaming.{StreamingQuery, Trigger}
 import org.apache.spark.sql.{DataFrame, SparkSession, functions}
 import org.github.explore.spark.common.stocksSchema
+
+import scala.concurrent.duration.DurationInt
 
 object StreamingDataFrames {
 
@@ -20,6 +22,12 @@ object StreamingDataFrames {
     // val lines = readData(spark, "socket")
     val lines = readData(spark, "csv")
     val streamingQuery = writeData(lines)
+    // every 2 seconds run the query
+    // val streamingQuery = writeDataWithTrigger(lines, trigger = Trigger.ProcessingTime(2.seconds))
+    // single batch, then terminate
+    // val streamingQuery = writeDataWithTrigger(lines, trigger = Trigger.Once())
+    // experimental, every 2 seconds create a batch with whatever you have
+    // val streamingQuery = writeDataWithTrigger(lines, trigger = Trigger.Continuous(2.seconds))
     streamingQuery.awaitTermination()
   }
 
@@ -61,4 +69,25 @@ object StreamingDataFrames {
     query
   }
 
+  def writeDataWithTrigger(df: DataFrame,
+                           sink: String = "console",
+                           queryName: String = "calleventaggs",
+                           outputMode: String = "append",
+                           trigger: Trigger = Trigger.ProcessingTime(2.seconds)): StreamingQuery = {
+
+    // tell between a static vs a streaming DF
+    println(s"Is this a streaming data frame: ${df.isStreaming}")
+
+    // transformation
+    val shortLines: DataFrame = df.filter(functions.length(col("value")) >= 3)
+
+    // consuming a DF
+    val query = shortLines.writeStream
+      .format(sink)
+      .queryName(queryName)
+      .outputMode(outputMode)
+      .trigger(trigger)
+      .start()
+    query
+  }
 }
